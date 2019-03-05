@@ -76,15 +76,24 @@ module.exports = (app, lando) => {
       console.log('Waiting until %s service is ready...', container.service);
       lando.log.info('Waiting until %s service is ready...', container.service);
 
-      // Inspect the containers for healthcheck status
-      return lando.engine.scan({id: container.id}).then(data => {
-        if (!_.has(data, 'State.Health')) return {service: container.service, health: 'healthy'};
-        if (_.get(data, 'State.Health.Status', 'unhealthy') === 'healthy') {
-          return {service: container.service, health: 'healthy'};
-        } else {
-          return lando.Promise.reject();
-        }
-      });
+        // Inspect the containers for healthcheck status
+        return lando.engine.scan({id: container.id}).then(data => {
+            if (!_.has(data, 'State.Health')) {
+                console.log('Service %s has no health state', container.service);
+                return {
+                    service: container.service, health: 'healthy'
+                };
+            }
+            if (_.get(data, 'State.Health.Status', 'unhealthy') === 'healthy') {
+                console.log('Service %s is healthy', container.service);
+                return {
+                    service: container.service, health: 'healthy'
+                };
+            } else {
+                console.log('Service %s is not "healthy" but "%s"', container.service, _.get(data, 'State.Health.Status'));
+                return lando.Promise.reject();
+            }
+        });
     }, {max: 25})
     // Set metadata if weve got a naught service
     .catch(error => ({service: container.service, health: 'unhealthy'})))
