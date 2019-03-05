@@ -131,13 +131,18 @@ module.exports = {
         options.command.unshift('docker-php-entrypoint');
       }
 
+      let xdebugRemoteId = options._app.env.LANDO_HOST_IP;
+      if (options.hasOwnProperty('xdebug_remote_ip')) {
+          xdebugRemoteId = options.xdebug_remote_ip;
+      }
+
       // Build the php
       const php = {
         image: `devwithlando/php:${options.version}-${options.image}-2`,
         environment: _.merge({}, options.environment, {
           PATH: options.path.join(':'),
           LANDO_WEBROOT: `/app/${options.webroot}`,
-          XDEBUG_CONFIG: `remote_enable=true remote_host=${options._app.env.LANDO_HOST_IP}`,
+          XDEBUG_CONFIG: `remote_enable=true remote_host=${xdebugRemoteId}`,
         }),
         networks: (_.startsWith(options.via, 'nginx')) ? {default: {aliases: ['fpm']}} : {default: {}},
         ports: (_.startsWith(options.via, 'apache') && options.version !== 'custom') ? ['80'] : [],
