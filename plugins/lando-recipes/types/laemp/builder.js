@@ -110,9 +110,9 @@ const getServices = options => ({
     type: options.database,
     portforward: true,
     creds: {
-      user: options.recipe,
-      password: options.recipe,
-      database: options.recipe,
+      user: options.app,
+      password: options.app,
+      database: options.app,
     },
   },
 });
