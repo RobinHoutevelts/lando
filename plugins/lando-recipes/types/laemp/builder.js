@@ -21,13 +21,18 @@ const toolingDefaults = {
         default: 'database',
         alias: ['h'],
       },
+      'database': {
+          description: 'The database name to import',
+          default: 'drupal8',
+          alias: ['db'],
+      },
       'no-wipe': {
         description: 'Do not destroy the existing database before an import',
         boolean: true,
       },
     },
   },
-  'db-export [file]': {
+  'db-export [file] [database]': {
     service: ':host',
     description: 'Exports database from a database service to a file',
     cmd: '/helpers/sql-export.sh',
@@ -37,6 +42,11 @@ const toolingDefaults = {
         description: 'The database service to use',
         default: 'database',
         alias: ['h'],
+      },
+      'database': {
+          description: 'The database name to export',
+          default: 'drupal8',
+          alias: ['db'],
       },
       stdout: {
         description: 'Dump database to stdout',

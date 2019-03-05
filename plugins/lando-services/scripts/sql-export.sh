@@ -27,12 +27,21 @@ FILE=${DATABASE}.`date +"%Y-%m-%d-%s"`.sql
 # TODO: compress the mostly duplicate code below?
 while (( "$#" )); do
   case "$1" in
-    # This doesn't do anything anymore
-    # we just keep it around for option validation
     -h|--host|--host=*)
-      if [ "${1##--database=}" != "$1" ]; then
+      if [ "${1##--host=}" != "$1" ]; then
+        HOST="${1#*=}"
         shift
       else
+        HOST="$2"
+        shift 2
+      fi
+      ;;
+    -db|--database|--database=*)
+      if [ "${1##--database=}" != "$1" ]; then
+        DATABASE="${1#*=}"
+        shift
+      else
+        DATABASE="$2"
         shift 2
       fi
       ;;
