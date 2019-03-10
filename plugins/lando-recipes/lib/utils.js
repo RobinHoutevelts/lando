@@ -92,10 +92,10 @@ exports.getLampDefaults = (name = 'lamp', via = 'apache') => ({
   parent: '_lamp',
   config: {
     confSrc: __dirname,
-    database: 'mysql',
+    database: 'mariadb',
     php: '7.3',
     via,
-    webroot: '.',
+    webroot: 'public',
     xdebug: false,
   },
   builder: (parent, config) => class LandoLamp extends parent {

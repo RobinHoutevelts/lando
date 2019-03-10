@@ -20,7 +20,7 @@ module.exports = {
     drupal: true,
     database: 'mariadb',
     via: 'nginx',
-    webroot: './public',
+    webroot: 'public',
   },
   builder: (parent, config) => class LandoDrupal8 extends parent {
     constructor(id, options = {}) {
