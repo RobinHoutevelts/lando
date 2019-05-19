@@ -71,6 +71,17 @@ server {
       return 404;
   }
 
+  # Wieni Faster-Than-Light endpoint
+  location ^~ /ftl/ {
+    proxy_set_header Host $http_host;
+    proxy_set_header Scheme $scheme;
+    proxy_set_header SERVER_PORT $server_port;
+    proxy_set_header REMOTE_ADDR $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+    proxy_pass http://fpm:8337;
+  }
+
   # In Drupal 8, we must also match new paths where the '.php' appears in
   # the middle, such as update.php/selection. The rule we use is strict,
   # and only allows this pattern with the update.php front controller.

@@ -20,10 +20,12 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     libmemcached-dev \
     libpng-dev \
     libpq-dev \
+    libssl-dev \
     libxml2-dev \
     libicu-dev \
     libzip-dev \
     mysql-client \
+    openssl \
     postgresql-client-9.6 \
     pv \
     ssh \
@@ -38,6 +40,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && pecl install oauth-2.0.3 \
   && pecl install redis-4.2.0 \
   && pecl install xdebug-2.7.0 \
+  && pecl install swoole-4.3.4 \
   && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
@@ -46,6 +49,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && docker-php-ext-enable memcached \
   && docker-php-ext-enable oauth \
   && docker-php-ext-enable redis \
+  && docker-php-ext-enable swoole \
   && docker-php-ext-install \
     bcmath \
     bz2 \
@@ -61,6 +65,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     pdo_mysql \
     pdo_pgsql \
     soap \
+    sockets\
     zip \
     intl \
     gettext \
@@ -75,3 +80,5 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && apt-get -y autoclean \
   && apt-get -y autoremove \
   && rm -rf /var/lib/apt/lists/* && rm -rf && rm -rf /var/lib/cache/* && rm -rf /var/lib/log/* && rm -rf /tmp/*
+
+EXPOSE 8337 9000
