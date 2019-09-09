@@ -72,7 +72,7 @@ server {
   }
 
   # Wieni Faster-Than-Light endpoint
-  location ^~ /ftl/ {
+  location ^~ /swoole/ {
     proxy_set_header Host $http_host;
     proxy_set_header Scheme $scheme;
     proxy_set_header SERVER_PORT $server_port;
