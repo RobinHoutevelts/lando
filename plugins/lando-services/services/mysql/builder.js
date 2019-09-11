@@ -8,7 +8,7 @@ module.exports = {
   name: 'mysql',
   config: {
     version: '5.7',
-    supported: ['8.0', '5.7'],
+    supported: ['8.0', '8.0.16', '5.7'],
     patchesSupported: true,
     confSrc: __dirname,
     creds: {
