@@ -143,6 +143,7 @@ module.exports = {
           PATH: options.path.join(':'),
           LANDO_WEBROOT: `/app/${options.webroot}`,
           XDEBUG_CONFIG: `remote_enable=true remote_host=${xdebugRemoteId}`,
+          PHP_IDE_CONFIG: `serverName=localhost`,
         }),
         networks: (_.startsWith(options.via, 'nginx')) ? {default: {aliases: ['fpm']}} : {default: {}},
         ports: (_.startsWith(options.via, 'apache') && options.version !== 'custom') ? ['80'] : [],
