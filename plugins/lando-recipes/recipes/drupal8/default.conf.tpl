@@ -113,7 +113,7 @@ server {
       # PHP 7 socket location.
       #fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
       #lando
-      fastcgi_pass {{LANDO_HOST_IP}}:91{{LANDO_PHP_VERSION}};
+      fastcgi_pass {{LANDO_FPM_HOST}}:{{LANDO_FPM_PORT}};
   }
 
   # Fighting with Styles? This little gem is amazing.
