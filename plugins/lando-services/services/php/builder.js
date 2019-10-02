@@ -25,6 +25,7 @@ const nginxConfig = options => ({
   userConfRoot: options.userConfRoot,
   version: '1.14',
   webroot: options.webroot,
+  php_version: options.version,
 });
 
 /*

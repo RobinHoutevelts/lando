@@ -19,6 +19,8 @@ server {
 
   root "{{LANDO_WEBROOT}}";
 
+  set $raw_root {{LANDO_APP_ROOT}}/public/;
+
   location = /favicon.ico {
       log_not_found off;
       access_log off;
@@ -101,7 +103,8 @@ server {
       include fastcgi_params;
       # Block httpoxy attacks. See https://httpoxy.org/.
       fastcgi_param HTTP_PROXY "";
-      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      fastcgi_param DOCUMENT_ROOT $raw_root;
+      fastcgi_param SCRIPT_FILENAME $raw_root$fastcgi_script_name;
       fastcgi_param PATH_INFO $fastcgi_path_info;
       fastcgi_param QUERY_STRING $query_string;
       fastcgi_intercept_errors on;
@@ -110,7 +113,7 @@ server {
       # PHP 7 socket location.
       #fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
       #lando
-      fastcgi_pass fpm:9000;
+      fastcgi_pass {{LANDO_HOST_IP}}:91{{LANDO_PHP_VERSION}};
   }
 
   # Fighting with Styles? This little gem is amazing.

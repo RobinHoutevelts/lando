@@ -51,6 +51,7 @@ module.exports = {
           NGINX_DAEMON_USER: 'root',
           NGINX_DAEMON_GROUP: 'root',
           LANDO_NEEDS_EXEC: 'DOEEET',
+          LANDO_PHP_VERSION: options.php_version.replace('.', ''),
         },
         ports: ['80'],
         user: 'root',
