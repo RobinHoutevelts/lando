@@ -3,6 +3,8 @@
 // Modules
 const _ = require('lodash');
 
+const minSupportedPhpVersion = 71;
+
 // Helper to builder nginx command
 const nginxCommand = vhost => [
   '/bin/bash -c',
@@ -52,8 +54,8 @@ module.exports = {
           NGINX_DAEMON_USER: 'root',
           NGINX_DAEMON_GROUP: 'root',
           LANDO_NEEDS_EXEC: 'DOEEET',
-          LANDO_FPM_HOST: (phpVersion >= 71) ? 'host.docker.internal' : 'fpm', // Only > php@7.1 is still brew-supported todo: use LANDO_HOST_IP instead of hardcoded mac-only value
-          LANDO_FPM_PORT: (phpVersion >= 71) ? ('91'+phpVersion) : 9000,   // So for older versions we'll still use the docker fpm
+          LANDO_FPM_HOST: (phpVersion >= minSupportedPhpVersion) ? 'host.docker.internal' : 'fpm', // Only > php@7.1 is still brew-supported todo: use LANDO_HOST_IP instead of hardcoded mac-only value
+          LANDO_FPM_PORT: (phpVersion >= minSupportedPhpVersion) ? ('91'+phpVersion) : 9000,   // So for older versions we'll still use the docker fpm
         },
         ports: ['80'],
         user: 'root',
