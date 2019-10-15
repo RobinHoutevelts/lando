@@ -103,10 +103,11 @@ server {
       include fastcgi_params;
       # Block httpoxy attacks. See https://httpoxy.org/.
       fastcgi_param HTTP_PROXY "";
-      fastcgi_param DOCUMENT_ROOT $raw_root;
-      fastcgi_param SCRIPT_FILENAME $raw_root$fastcgi_script_name;
+      fastcgi_param DOCUMENT_ROOT ${{LANDO_FPM_ROOT}};
+      fastcgi_param SCRIPT_FILENAME ${{LANDO_FPM_ROOT}}$fastcgi_script_name;
       fastcgi_param PATH_INFO $fastcgi_path_info;
       fastcgi_param QUERY_STRING $query_string;
+      fastcgi_param LANDO 1;
       fastcgi_intercept_errors on;
       # PHP 5 socket location.
       #fastcgi_pass unix:/var/run/php5-fpm.sock;
