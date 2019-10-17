@@ -68,7 +68,7 @@ Let's make sure your default php version is 7.3
 brew link --force php@7.3
 ```
 
-### Configure
+### Configure php-packages
 
 Now we need to configure the shit out of those thangs
 
@@ -98,6 +98,26 @@ extension="redis.so"
 ```
 
 *Perform the same steps also for php 7.0, 7.1 and 7.2 ( they each have their own php.ini file)*
+
+### Configure php-fpm
+
+We need to define a port we'll listen on.
+
+`sudo nano /usr/local/etc/php/7.3/php-fpm.d/www.conf`
+
+In there replace
+
+```
+;listen = 127.0.0.1:9000
+```
+
+with
+
+```
+listen = 127.0.0.1:9173
+```
+
+Do the same for php 7.1 and 7.2 but use ports `9171` and `9172`
 
 ### Restart the services
 
