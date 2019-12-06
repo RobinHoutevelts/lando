@@ -3,7 +3,7 @@
 // Modules
 const _ = require('lodash');
 
-const minSupportedPhpVersion = 71;
+const minSupportedPhpVersion = 70;
 
 // Helper to builder nginx command
 const nginxCommand = vhost => [

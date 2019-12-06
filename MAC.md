@@ -117,7 +117,7 @@ with
 listen = 127.0.0.1:9173
 ```
 
-Do the same for php 7.1 and 7.2 but use ports `9171` and `9172`
+Do the same for php 7.0, 7.1 and 7.2 but use ports `9170`, `9171` and `9172`
 
 ### Restart the services
 
@@ -125,18 +125,18 @@ Do the same for php 7.1 and 7.2 but use ports `9171` and `9172`
 sudo brew services restart php
 sudo brew services restart php@7.2
 sudo brew services restart php@7.1
+sudo brew services restart php@7.0
 ```
 
 
 ## Errors:
 
-- php@7.1 doesn't exist anymore in brew
+- php@7.x doesn't exist anymore in brew
 
 ye.. That means it's EOL. You should just ignore it then.
-But make sure to change `minSupportedPhpVersion` to `72` then in `plugins/lando-services/services/nginx/builder.js` and create a new build.
+But make sure to change `minSupportedPhpVersion` to `7x` then in `plugins/lando-services/services/nginx/builder.js` and create a new build.
 
 You'll fall back to the slower lando version.
-
 
 # Caveats
 
