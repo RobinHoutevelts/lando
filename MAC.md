@@ -27,9 +27,12 @@ Aight! My man!
 Let's first install some php on your machine
 
 ```
+brew tap exolnet/homebrew-deprecated
+
 brew install php@7.3
 brew install php@7.2
 brew install php@7.1
+brew install php@7.0
 ```
 
 Then install some much-needed modules.
@@ -47,6 +50,11 @@ pecl install xdebug-2.7.2
 
 export PATH="/usr/local/opt/php@7.1/bin:$PATH"
 export PATH="/usr/local/opt/php@7.1/sbin:$PATH"
+pecl install redis
+pecl install xdebug-2.7.2
+
+export PATH="/usr/local/opt/php@7.0/bin:$PATH"
+export PATH="/usr/local/opt/php@7.0/sbin:$PATH"
 pecl install redis
 pecl install xdebug-2.7.2
 
@@ -89,7 +97,7 @@ xdebug.remote_port=9000
 extension="redis.so"
 ```
 
-*Perform the same steps also for php 7.1 and 7.2 ( they each have their own php.ini file)*
+*Perform the same steps also for php 7.0, 7.1 and 7.2 ( they each have their own php.ini file)*
 
 ### Restart the services
 
