@@ -24,11 +24,19 @@ Aight! My man!
 
 ### Install
 
+If you're gonna drush on your machine you'll need the `mysql-client` package
+
+```
+brew install mysql-client
+echo 'export PATH="/usr/local/opt/mysql-client/bin:$PATH"' >> ~/.zshrc
+```
+
 Let's first install some php on your machine
 
 ```
 brew tap exolnet/homebrew-deprecated
 
+brew install php@7.4
 brew install php@7.3
 brew install php@7.2
 brew install php@7.1
@@ -38,34 +46,39 @@ brew install php@7.0
 Then install some much-needed modules.
 
 ```
+export PATH="/usr/local/opt/php@7.4/bin:$PATH"
+export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
+pecl install redis
+pecl install xdebug-2.9.0
+
 export PATH="/usr/local/opt/php@7.3/bin:$PATH"
 export PATH="/usr/local/opt/php@7.3/sbin:$PATH"
 pecl install redis
-pecl install xdebug-2.7.2
+pecl install xdebug-2.9.0
 
 export PATH="/usr/local/opt/php@7.2/bin:$PATH"
 export PATH="/usr/local/opt/php@7.2/sbin:$PATH"
 pecl install redis
-pecl install xdebug-2.7.2
+pecl install xdebug-2.9.0
 
 export PATH="/usr/local/opt/php@7.1/bin:$PATH"
 export PATH="/usr/local/opt/php@7.1/sbin:$PATH"
 pecl install redis
-pecl install xdebug-2.7.2
+pecl install xdebug-2.9.0
 
 export PATH="/usr/local/opt/php@7.0/bin:$PATH"
 export PATH="/usr/local/opt/php@7.0/sbin:$PATH"
 pecl install redis
-pecl install xdebug-2.7.2
+pecl install xdebug-2.9.0
 
-export PATH="/usr/local/opt/php@7.3/bin:$PATH"
-export PATH="/usr/local/opt/php@7.3/sbin:$PATH"
+export PATH="/usr/local/opt/php@7.4/bin:$PATH"
+export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
 ```
 
-Let's make sure your default php version is 7.3
+Let's make sure your default php version is 7.4
 
 ```
-brew link --force php@7.3
+brew link --force php@7.4
 ```
 
 ### Configure php-packages
@@ -97,13 +110,13 @@ xdebug.remote_port=9000
 extension="redis.so"
 ```
 
-*Perform the same steps also for php 7.0, 7.1 and 7.2 ( they each have their own php.ini file)*
+*Perform the same steps also for php 7.0, 7.1, 7.2 and 7.3 ( they each have their own php.ini file)*
 
 ### Configure php-fpm
 
 We need to define a port we'll listen on.
 
-`sudo nano /usr/local/etc/php/7.3/php-fpm.d/www.conf`
+`sudo nano /usr/local/etc/php/7.4/php-fpm.d/www.conf`
 
 In there replace
 
@@ -114,15 +127,16 @@ In there replace
 with
 
 ```
-listen = 127.0.0.1:9173
+listen = 127.0.0.1:9174
 ```
 
-Do the same for php 7.0, 7.1 and 7.2 but use ports `9170`, `9171` and `9172`
+Do the same for php 7.0, 7.1, 7.2 and 7.3 but use ports `9170`, `9171`, `9172`, `9173`
 
 ### Restart the services
 
 ```
 sudo brew services restart php
+sudo brew services restart php@7.3
 sudo brew services restart php@7.2
 sudo brew services restart php@7.1
 sudo brew services restart php@7.0
@@ -144,23 +158,18 @@ Hmm, I do have one thing that bothers me..
 
 In order to access services defined in your lando.yml file you *have to* portforward it and use that in your `.env`.
 
-For example, I want to use the `database` service. So I add this to my `lando.yml`
-
-```yml
-services:
-  database:
-    portforward: 9410
-```
-
-And in my `.env` you'll find
+For example, I want to use the `database` service so in my `.env` you'll find
 
 ```
 DB_HOST=127.0.0.1
 DB_USERNAME=myproject
 DB_PASSWORD=myproject
 DB_DATABASE=myproject
-DB_PORT=9410
+DB_PORT=32813
 ```
 
-It sucks you have to do this. Any help on the matter is accepted.
-( But don't 'fix' it by having `database` accept connections from anywhere 😅 )
+You find the port by running `lando info` and look for the `external_connection:` port of the `database` service.
+
+I usually work on a project for a longer amount of time. And I don't mind having multiple projects running.
+
+It's only when you (re)start a service you have to remind yourself to set the port.
