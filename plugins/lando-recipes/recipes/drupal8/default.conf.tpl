@@ -19,7 +19,7 @@ server {
 
   root "{{LANDO_WEBROOT}}";
 
-  set $raw_root {{LANDO_APP_ROOT}}/public/;
+  set $raw_root {{LANDO_APP_ROOT}}/{{LANDO_REAL_WEBROOT}}/;
 
   location = /favicon.ico {
       log_not_found off;
