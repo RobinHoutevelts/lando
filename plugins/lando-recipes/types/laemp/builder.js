@@ -115,6 +115,10 @@ const getServices = options => ({
       database: options.app,
     },
   },
+  redis: {
+    type: 'redis',
+    portforward: true,
+  },
 });
 
 /*
