@@ -126,7 +126,7 @@ exports.startTable = app => {
         return _.includes(info.urls, item.url);
       });
     }
-    if (_.has(info, 'external_connection') && !_.isEmpty(info.external_connection.port) && _.isNumber(info.external_connection.port)) {
+    if (_.has(info, 'external_connection') && !_.isEmpty(info.external_connection.port)) {
       portforwardings[info.service] = [info.external_connection.port];
     }
   });
@@ -137,7 +137,7 @@ exports.startTable = app => {
   });
   // Add service PORTS
   _.forEach(portforwardings, (items, service) => {
-    data[service + ' ports'] = items;
+    data[service + ' port'] = items;
   });
 
   // Return data
