@@ -111,6 +111,7 @@ exports.startTable = app => {
   // Spin up collectors
   const data = {};
   const urls = {};
+  const portforwardings = {};
 
   // Add generic data
   data.name = app.name;
@@ -125,11 +126,18 @@ exports.startTable = app => {
         return _.includes(info.urls, item.url);
       });
     }
+    if (_.has(info, 'external_connection') && !_.isEmpty(info.external_connection.port) && _.isNumber(info.external_connection.port)) {
+      portforwardings[info.service] = [info.external_connection.port];
+    }
   });
 
   // Add service URLS
   _.forEach(urls, (items, service) => {
     data[service + ' urls'] = _.map(items, 'theme');
+  });
+  // Add service PORTS
+  _.forEach(portforwardings, (items, service) => {
+    data[service + ' ports'] = items;
   });
 
   // Return data
