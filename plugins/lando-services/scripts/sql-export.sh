@@ -63,22 +63,34 @@ while (( "$#" )); do
   esac
 done
 
-# Get type-specific dump cpmmand
-if [[ ${POSTGRES_DB} != '' ]]; then
-  DUMPER="pg_dump postgresql://$USER@localhost:$PORT/$DATABASE"
-else
-  DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${DATABASE}"
-fi
+dump_db() {
+  if [[ ${POSTGRES_DB} != '' ]]; then
+    pg_dump postgresql://$USER@localhost:$PORT/$DATABASE
+    return
+  fi
+
+  mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${DATABASE} --no-data;
+  mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${DATABASE} \
+    --no-create-info \
+    --ignore-table="$DATABASE.cache_default" \
+    --ignore-table="$DATABASE.cache_data" \
+    --ignore-table="$DATABASE.cache_entity" \
+    --ignore-table="$DATABASE.queue" \
+    --ignore-table="$DATABASE.wmcontroller_cache" \
+    --ignore-table="$DATABASE.wmcontroller_cache_tags" \
+    --ignore-table="$DATABASE.cache_dynamic_page_cache" \
+    --ignore-table="$DATABASE.cache_render";
+}
 
 # Do the dump to stdout
 if [ "$STDOUT" == "true" ]; then
-  $DUMPER
+  dump_db
 else
 
   # Clean up last dump before we dump again
   unalias rm 2> /dev/null
   rm ${FILE} 2> /dev/null
-  $DUMPER > ${FILE}
+  dump_db > ${FILE}
 
   # Show the user the result
   if [ $? -ne 0 ]; then
