@@ -92,7 +92,7 @@ exports.startTable = app => {
         return _.includes(info.urls, item.url);
       });
     }
-    if (_.has(info, 'external_connection') && !_.isEmpty(info.external_connection.port)) {
+    if (_.has(info, 'external_connection') && !_.isEmpty(info.external_connection.port) && info.external_connection.port !== 'not forwarded') {
       portforwardings[info.service] = [info.external_connection.port];
     }
   });

@@ -24,6 +24,9 @@ module.exports = {
     remoteFiles: {
       database: '/opt/bitnami/mariadb/conf/my_custom.cnf',
     },
+    envPortNames: [
+      'DB_PORT',
+    ],
   },
   parent: '_service',
   builder: (parent, config) => class LandoMariaDb extends parent {

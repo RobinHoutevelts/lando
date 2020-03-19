@@ -19,6 +19,9 @@ module.exports = {
     remoteFiles: {
       server: '/usr/local/etc/redis/redis.conf',
     },
+    envPortNames: [
+      'REDIS_PORT',
+    ],
   },
   parent: '_service',
   builder: (parent, config) => class LandoRedis extends parent {

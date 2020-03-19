@@ -46,6 +46,11 @@ module.exports = {
           port: _.get(options, 'portforward', 'not forwarded'),
         },
       });
+
+      if (options.portforward && options.envPortNames) {
+        options.info.envPortNames = options.envPortNames;
+      }
+
       // Add in creds if we have them
       if (options.creds) options.info.creds = options.creds;
       super(id, options, ...sources);

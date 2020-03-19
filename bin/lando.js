@@ -30,7 +30,13 @@ const cli = new Cli(ENVPREFIX, LOGLEVELCONSOLE, USERCONFROOT);
 const landoFile = cli.defaultConfig().landoFile;
 const preLandoFiles = cli.defaultConfig().preLandoFiles;
 const postLandoFiles = cli.defaultConfig().postLandoFiles;
-const landoFiles = bootstrap.getLandoFiles(_.flatten([preLandoFiles, [landoFile], postLandoFiles], process.cwd()));
+const landoFiles = _.flatten([
+    bootstrap.getLandoFiles(_.flatten([preLandoFiles, [landoFile]]), process.cwd()),
+    _.first(_.flatten([
+        bootstrap.getLandoFiles(postLandoFiles, process.cwd()),
+        bootstrap.getLandoFiles(postLandoFiles, cli.defaultConfig().userConfRoot),
+    ]))
+]).filter(Boolean);
 const config = (!_.isEmpty(landoFiles)) ? bootstrap.getApp(landoFiles, cli.defaultConfig().userConfRoot) : {};
 const bsLevel = (_.has(config, 'recipe')) ? 'APP' : 'TASKS';
 

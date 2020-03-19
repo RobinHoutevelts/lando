@@ -3,6 +3,7 @@
 // Modules
 const _ = require('lodash');
 const utils = require('./lib/utils');
+const fs = require('fs')
 
 // Build keys
 const preRootSteps = [
@@ -94,8 +95,7 @@ module.exports = (app, lando) => {
 
     // Not only set the forwarded ports in 'ready' event.
     // Also do it in post-start so the values are updated when re(started)
-    // And do it early ( priority 100 )
-    app.events.on('post-start', 100, () => {
+    app.events.on('post-start', () => {
         const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
         return lando.engine.list({project: app.project})
             .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
@@ -111,6 +111,36 @@ module.exports = (app, lando) => {
                     _.set(_.find(app.info, {service: service.service}), 'external_connection.port', port[0].HostPort);
                 }
             }));
+    });
+
+    // WIENI
+    // Update the .env of the project to use the correct DB_PORT and REDIS_PORT
+    // We do this after the app.info contains the new forwarded port values.
+    // So priority has to be higher than 0
+    // Disable it by adding to your .lando.yml:
+    // config:
+    //   updateEnvPorts: false
+    app.events.on('post-start', 10, () => {
+        const envFile = app.env.LANDO_APP_ROOT + '/.env';
+        if (
+            !_.get(app.config.config, 'updateEnvPorts', true)
+            || !fs.existsSync(envFile)
+        ) {
+            return;
+        }
+        let envFileContent = fs.readFileSync(envFile).toString();
+        const originalEnvFileContent = envFileContent;
+
+        const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
+        forwarders.forEach((service) => {
+            _.get(service, 'envPortNames', []).forEach((envName) => {
+                let r = new RegExp('^' + envName + '=.*?$', 'mgi');
+                envFileContent = envFileContent.replace(r, envName + '=' + service.external_connection.port)
+            });
+        });
+        if (envFileContent !== originalEnvFileContent) {
+            fs.writeFileSync(envFile, envFileContent);
+        }
     });
 
   // Remove build locks on an uninstall
