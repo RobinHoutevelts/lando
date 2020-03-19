@@ -49,27 +49,27 @@ Then install some much-needed modules.
 export PATH="/usr/local/opt/php@7.4/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
 pecl install redis
-pecl install xdebug-2.9.0
+pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.3/bin:$PATH"
 export PATH="/usr/local/opt/php@7.3/sbin:$PATH"
 pecl install redis
-pecl install xdebug-2.9.0
+pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.2/bin:$PATH"
 export PATH="/usr/local/opt/php@7.2/sbin:$PATH"
 pecl install redis
-pecl install xdebug-2.9.0
+pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.1/bin:$PATH"
 export PATH="/usr/local/opt/php@7.1/sbin:$PATH"
 pecl install redis
-pecl install xdebug-2.9.0
+pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.0/bin:$PATH"
 export PATH="/usr/local/opt/php@7.0/sbin:$PATH"
 pecl install redis
-pecl install xdebug-2.9.0
+pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.4/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
@@ -85,7 +85,7 @@ brew link --force php@7.4
 
 Now we need to configure the shit out of those thangs
 
-`sudo nano /usr/local/etc/php/7.3/php.ini`
+`sudo nano /usr/local/etc/php/7.4/php.ini`
 
 Remove the two added extensions ( we'll add them back later )
 
@@ -151,25 +151,3 @@ ye.. That means it's EOL. You should just ignore it then.
 But make sure to change `minSupportedPhpVersion` to `7x` then in `plugins/lando-services/services/nginx/builder.js` and create a new build.
 
 You'll fall back to the slower lando version.
-
-# Caveats
-
-Hmm, I do have one thing that bothers me..
-
-In order to access services defined in your lando.yml file you *have to* portforward it and use that in your `.env`.
-
-For example, I want to use the `database` service so in my `.env` you'll find
-
-```
-DB_HOST=127.0.0.1
-DB_USERNAME=myproject
-DB_PASSWORD=myproject
-DB_DATABASE=myproject
-DB_PORT=32813
-```
-
-You find the port by running `lando info` and look for the `external_connection:` port of the `database` service.
-
-I usually work on a project for a longer amount of time. And I don't mind having multiple projects running.
-
-It's only when you (re)start a service you have to remind yourself to set the port.
