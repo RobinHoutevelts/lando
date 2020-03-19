@@ -92,6 +92,27 @@ module.exports = (app, lando) => {
     }));
   });
 
+    // Not only set the forwarded ports in 'ready' event.
+    // Also do it in post-start so the values are updated when re(started)
+    // And do it early ( priority 100 )
+    app.events.on('post-start', 100, () => {
+        const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
+        return lando.engine.list({project: app.project})
+            .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
+            .map(service => ({
+                id: service.id,
+                service: service.service,
+                internal: _.get(_.find(app.info, {service: service.service}), 'internal_connection.port'),
+            }))
+            .map(service => lando.engine.scan(service).then(data => {
+                const key = `NetworkSettings.Ports.${service.internal}/tcp`;
+                const port = _.filter(_.get(data, key, []), forward => forward.HostIp === '0.0.0.0');
+                if (_.has(port[0], 'HostPort')) {
+                    _.set(_.find(app.info, {service: service.service}), 'external_connection.port', port[0].HostPort);
+                }
+            }));
+    });
+
   // Remove build locks on an uninstall
   app.events.on('post-uninstall', () => {
     lando.cache.remove(preLockfile);
