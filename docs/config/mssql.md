@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable Microsoft MSSQL service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # MSSQL
 
 [MSSQL](https://www.microsoft.com/en-us/sql-server/sql-server-2016) lets you build intelligent, mission-critical applications using a scalable, hybrid database platform that has everything built in—from in-memory performance and advanced security to in-database analytics.
@@ -86,3 +90,5 @@ lando destroy -y && lando start
 ## Getting information
 
 You can get connection and credential information about your mssql instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="Databases"/>

@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable redis service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Redis
 
 [Redis](https://redis.io/) is an open source, in-memory and typed data structure store, used as a database, cache and message broker.
@@ -107,3 +111,5 @@ services:
 ## Getting information
 
 You can get connection and credential information about your redis instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="Redis"/>

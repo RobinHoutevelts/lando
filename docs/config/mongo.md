@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable MongoDB service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # MongoDB
 
 [MongoDB](https://en.wikipedia.org/wiki/MongoDB)  is a free and open-source cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schemas.
@@ -98,3 +102,5 @@ services:
 ## Getting information
 
 You can get connection and credential information about your mongo instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="Databases"/>

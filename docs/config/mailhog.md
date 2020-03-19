@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable mailhog service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # MailHog
 
 [MailHog](https://github.com/mailhog/MailHog) is an email testing tool for developers.
@@ -81,3 +85,5 @@ Note that we will install the [mhsendmail](https://github.com/mailhog/mhsendmail
 ## Getting information
 
 You can get connection and credential information about your mailhog instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="MailHog"/>

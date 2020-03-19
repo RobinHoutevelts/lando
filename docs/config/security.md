@@ -1,3 +1,7 @@
+---
+description: Lando uses its own, or a configurable, certificate authority to SSL/TLS secure all its local traffic, removing the need of local cert bypass flags or annoying browser warnings.
+---
+
 # SSL/TLS
 
 Lando uses its own Certificate Authority to sign the certs for each service and to ensure that these certs are trusted on our [internal Lando network](./networking.md). They should live inside every service at `/certs`.
@@ -69,3 +73,5 @@ Firefox users may still see browser warnings after performing the steps above. F
 * Search for `security.enterprise_roots.enabled`
 * Set the value to `true`
 :::
+
+<RelatedGuides tag="Security"/>

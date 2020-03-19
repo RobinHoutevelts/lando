@@ -1,3 +1,7 @@
+---
+description: Lando services are a curated set of Docker containers like php, apache, node, mysql that are stupid easy to use but also as configurable as any other Docker image.
+---
+
 # Services
 
 Lando services are our distillation of Docker containers into their most important options combined with some *special sauce* to setup good [networking](./networking.md), [certificates](./security.md) and [SSH keys](./ssh.md) as well as options to run [build steps](#build-steps) and provide low level [overrides](#overrides).
@@ -290,3 +294,5 @@ This service is useful if you are:
 3. Need a service not currently provided by Lando itself
 
 You will need to rebuild your app with `lando rebuild` to apply the changes to this file. You can check out the full code for this example [over here](https://github.com/lando/lando/tree/master/examples/compose).
+
+<RelatedGuides tag="Services"/>

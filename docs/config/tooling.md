@@ -1,3 +1,7 @@
+---
+description: Lando tooling is a way to access useful tools inside of containers as though they were running natively. You can also use them for scripting, automation or complex dev requirements.
+---
+
 # Tooling
 
 Lando provides a nice way to:
@@ -23,7 +27,7 @@ You will want to make sure you install the tools you need inside of the services
 It's fairly straightforward to add tooling to your Landofile using the `tooling` top level config. Here are all the options you can use for a given tooling route and their default values.
 
 ```yaml
-tooling
+tooling:
   mycommand:
     service: this is required, use `lando info` to find the one you want
     description: Runs <mycommand> commands
@@ -298,3 +302,5 @@ exit
 
 # Add grunt to the tooling in your .lando.yml
 ```
+
+<RelatedGuides tag="Tooling"/>

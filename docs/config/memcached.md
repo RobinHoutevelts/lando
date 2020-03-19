@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable memcached service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Memcached
 
 [Memcached](https://memcached.org/) is an in-memory key-value store for small chunks of arbitrary data (strings, objects) from results of database calls, API calls, or page rendering.
@@ -72,3 +76,5 @@ services:
 ## Getting information
 
 You can get connection and credential information about your memcached instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="Memcached"/>

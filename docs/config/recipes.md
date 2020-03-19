@@ -1,3 +1,7 @@
+---
+description: Lando recipes set sane defaults for common use cases like Drupal, WordPress or MEAN but are also highly configurable and extensible for all occasions.
+---
+
 # Recipes
 
 Recipes are Lando's highest level abstraction and they contain common combinations of [routing](./proxy.md), [services](./services.md), and [tooling](./tooling.md). Said another way, recipes are common development use cases and starting points eg `LAMP` or `Drupal 8`.
@@ -17,7 +21,7 @@ recipe: drupal8
 You can optionally configure some of the more obvious things in your recipe such as service versions, database types and config files using the top-level `config` config in your [Landofile](./lando.md).
 
 ::: tip
-While a decent amount config is the same from recipe to recipe we recommend you consult the documentation for the recipe you intende to use for the full list of its config options.
+While a decent amount config is the same from recipe to recipe we recommend you consult the documentation for the recipe you intend to use for the full list of its config options.
 :::
 
 For example here are some of the configurable things in the [LAMP](./lamp.md) recipe.
@@ -104,3 +108,5 @@ tooling:
   npm:
     service: node
 ```
+
+<RelatedGuides tag="Recipes"/>
