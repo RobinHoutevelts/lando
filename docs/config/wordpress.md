@@ -1,3 +1,7 @@
+---
+description: Use WordPress on Lando for local development; powered by Docker and Docker Compose, config php version, swap db backends or webserver, use composer, wp cli, xdebug and custom config files, oh and also import and exports databases.
+---
+
 # WordPress
 
 WordPress is open source software you can use to create a beautiful website, blog, or app.
@@ -242,3 +246,5 @@ lando php -i
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+
+<RelatedGuides tag="WordPress"/>

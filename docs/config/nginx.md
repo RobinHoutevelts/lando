@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable nginx service to Lando for local development with all the power of Docker and Docker Compose; learn how to change version, setup SSL, use a custom webroot or use custom Apache config.
+---
+
 # nginx
 
 [nginx](https://www.nginx.com/resources/wiki/) is a very common webserver and reverse proxy
@@ -78,3 +82,5 @@ services:
       vhosts: config/default.conf.tpl
       param: config/fastcgi_params
 ```
+
+<RelatedGuides tag="nginx"/>

@@ -1,3 +1,7 @@
+---
+description: Lando events let you run aribitrary commands before or after certain parts of the Lando runtime; clear caches after a database import or run a script before deployment.
+---
+
 # Events
 
 ::: tip When should I use events instead of a build step?
@@ -105,3 +109,5 @@ events:
     - node: yarn sass
     - appserver: composer compile-templates
 ```
+
+<RelatedGuides tag="Events"/>

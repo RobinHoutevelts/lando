@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable phpmyadmin service to Lando for local development with all the power of Docker and Docker Compose; connect all your databases for easy GUI goodness.
+---
+
 # PhpMyAdmin
 
 [phpMyAdmin](https://www.phpmyadmin.net/) is a free software tool written in PHP, intended to handle the administration of MySQL over the Web.
@@ -108,3 +112,5 @@ my-service:
 ## Getting information
 
 You can get connection and credential information about your phpmyadmin instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="PhpMyAdmin"/>

@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable ruby service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Ruby
 
 [Ruby](https://www.ruby-lang.org/en/) A dynamic, open source programming language with a focus on simplicity and productivity. It has an elegant syntax that is natural to read and easy to write.
@@ -91,3 +95,5 @@ Lando will set the following `PATH` hierarchy for this service.
 ```
 
 This is useful to note if you are not using absolute paths in any [tooling routes](./../config/tooling.md) and are getting the unexpected version of a particular utility.
+
+<RelatedGuides tag="Ruby"/>

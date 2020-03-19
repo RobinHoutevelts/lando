@@ -1,5 +1,49 @@
 # 2019
 
+## v3.0.0-rc.23 - [November 26, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.23)
+
+**WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
+
+1. [CHECK OUT THE BIG CHANGES](https://thinktandem.io/blog/2019/02/01/lando-is-ready-for-the-masses-with-rc2-release/) IN RC.2!
+2. USE [THIS GUIDE](https://docs.lando.dev/guides/updating-to-rc2.html) TO UPDATE YOUR LANDOFILES
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.lando.dev/**
+
+* Added process handling and management to `shell.js`
+* Added an opt-in for crash and error reporting
+* Added sponsorship options to the website and docs [#0](https://lando.dev/sponsor/)
+* Added `The Lando Alliance` to the website [#0](https://lando.dev/alliance/join/)
+* Added Catalina support via Notarization [#1829](https://github.com/lando/lando/issues/1829)
+* Clarified and updated Terms of Use and Privacy Policy
+* Fixed `NET::ERR_CERT_INVALID` on Chrome, may require `lando restart` [#1831](https://github.com/lando/lando/issues/1831)
+* Improved anonymity of usage reporting
+* Improved `metrics` server
+* Updated to Docker Desktop 2.1.0.5
+
+## v3.0.0-rc.22 - [October 7, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.22)
+
+**WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
+
+1. [CHECK OUT THE BIG CHANGES](https://thinktandem.io/blog/2019/02/01/lando-is-ready-for-the-masses-with-rc2-release/) IN RC.2!
+2. USE [THIS GUIDE](https://docs.lando.dev/guides/updating-to-rc2.html) TO UPDATE YOUR LANDOFILES
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
+
+* Updated to Docker Desktop 2.1.0.2/3 for Catalina prep
+
+## v3.0.0-rc.21 - [October 1, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.21)
+
+**WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
+
+1. [CHECK OUT THE BIG CHANGES](https://thinktandem.io/blog/2019/02/01/lando-is-ready-for-the-masses-with-rc2-release/) IN RC.2!
+2. USE [THIS GUIDE](https://docs.devwithlando.io/guides/updating-to-rc2.html) TO UPDATE YOUR LANDOFILES
+
+**ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
+
+* Fixed upstream bug with `apache` [#1804](https://github.com/lando/lando/issues/1804)
+* Fixed upstream bug with `memcached` [#1804](https://github.com/lando/lando/issues/1804)
+* Improved documentation search with Algolia [#1756](https://github.com/lando/lando/issues/1756)
+
 ## v3.0.0-rc.20 - [August 16, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.20)
 
 **WHILE WE'VE TRIED TO MAINTAIN BACKWARDS COMPATIBILITY WE RECOMMEND YOU READ THE BELOW IF YOU ARE UPDATING FROM PRE RC2**
@@ -148,7 +192,7 @@
 **ALSO, STILL, SERIOUSLY, READ THE DOCS!: https://docs.devwithlando.io/**
 
 * Added `<<` and `>>` to list of `SHELL` auto-wrapped characters in tooling/events/build commands
-* Fixed `machine token` persistance for `pantheon` apps that are `git cloned` instead of `lando init` [#1475](https://github.com/lando/lando/issues/1475)
+* Fixed `machine token` persistence for `pantheon` apps that are `git cloned` instead of `lando init` [#1475](https://github.com/lando/lando/issues/1475)
 * Fixed regression causing `pantheon` `nginx` config to not load correctly
 
 ## v3.0.0-rc.11 - [February 20, 2019](https://github.com/lando/lando/releases/tag/v3.0.0-rc.11)

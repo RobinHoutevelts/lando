@@ -41,7 +41,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && pecl install memcached \
   && pecl install oauth-2.0.2 \
   && pecl install redis-3.1.2 \
-  && pecl install xdebug-2.6.0beta1 \
+  && pecl install xdebug \
   && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
@@ -70,8 +70,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     gettext \
     pcntl \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php -r "if (hash_file('SHA384', 'composer-setup.php') === 'a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.9.0 \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.9.1 \
   && php -r "unlink('composer-setup.php');" \
   && chsh -s /bin/bash www-data && mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www \
   && su -c "composer global require hirak/prestissimo" -s /bin/sh www-data \

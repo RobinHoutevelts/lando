@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable python service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Python
 
 [Python](https://www.python.org/) is a programming language that lets you work more quickly and integrate your systems more effectively.
@@ -113,3 +117,5 @@ Lando will set the following `PATH` hierarchy for this service.
 ```
 
 This is useful to note if you are not using absolute paths in any [tooling routes](./../config/tooling.md) and are getting the unexpected version of a particular utility.
+
+<RelatedGuides tag="Python}"/>

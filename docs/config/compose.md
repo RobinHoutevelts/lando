@@ -1,3 +1,7 @@
+---
+description: If there isn't a service Lando provides out of the box use this to add any other Docker image using Docker Compose syntax.
+---
+
 # Compose
 
 This service is a "catch all" that allows power users to specify custom services that are not currently one of Lando's [supported services](./../config/services.md). You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).
@@ -41,3 +45,5 @@ services:
 Note that while `compose` services also get the same Lando *secret sauce* but there is a notable difference here. By default Lando will hijack the Docker containers `entrypoint`. This means if your custom container set's its own entrypoint you will need to remove that entrypoint and set it as the first argument in the `command`.
 
 In the example above `docker-php-entrypoint` is the default `entrypoint` for the `drupal:8` image but we have moved it so that it is the first argument of `command`. This both allows the container to run as expected and allows Lando to do its thing.
+
+<RelatedGuides tag="Compose"/>

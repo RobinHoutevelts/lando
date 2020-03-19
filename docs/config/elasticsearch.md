@@ -1,3 +1,7 @@
+---
+description: Add a highly configurable Elasticsearch service to Lando for local development with all the power of Docker and Docker Compose.
+---
+
 # Elasticsearch
 
 [Elasticsearch](https://www.elastic.co/products/elasticsearch) is a search and analytics engine, commonly used as a substitute for Solr or for collecting log and metrics data.
@@ -106,3 +110,5 @@ services:
 ## Getting information
 
 You can get connection and credential information about your elasticsearch instance by running [`lando info`](./../cli/info.md). It may also be worth checking out our [accessing services externally guide](./../guides/external-access.md).
+
+<RelatedGuides tag="Elasticsearch"/>

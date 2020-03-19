@@ -1,3 +1,7 @@
+---
+description: Use Laravel on Lando for local development; powered by Docker and Docker Compose, config php version, swap db or caching backends or webserver, use composer. laravel CLI and artisan, xdebug and custom config files, oh and also import and exports databases.
+---
+
 # Laravel
 
 Laravel is The PHP Framework For Web Artisans.
@@ -342,3 +346,5 @@ lando php -v
 ```
 
 You can also run `lando` from inside your app directory for a complete list of commands which is always advisable as your list of commands may not 100% be the same as the above. For example if you set `database: postgres` you will get `lando psql` instead of `lando mysql`.
+
+<RelatedGuides tag="Laravel"/>
