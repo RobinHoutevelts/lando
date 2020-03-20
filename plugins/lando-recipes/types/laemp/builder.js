@@ -32,6 +32,12 @@ const toolingDefaults = {
       },
     },
   },
+  'db-open': {
+    service: 'database',
+    description: 'Opens you mysql client',
+    level: 'local',
+    cmd: '/helpers/sql-open.sh',
+  },
   'db-export [file] [database]': {
     service: ':host',
     description: 'Exports database from a database service to a file',
