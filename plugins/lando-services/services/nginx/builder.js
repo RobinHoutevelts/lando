@@ -13,8 +13,6 @@ const nginxCommand = vhost => [
   'render-template',
   `\"${vhost}\" > \"/opt/bitnami/nginx/conf/vhosts/lando.conf\"`,
   '&&',
-  'chmod +x /launch.sh',
-  '&&',
   '/launch.sh"',
 ].join(' ');
 
