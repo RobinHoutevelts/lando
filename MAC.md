@@ -48,28 +48,28 @@ Then install some much-needed modules.
 ```
 export PATH="/usr/local/opt/php@7.4/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
-pecl install redis
-pecl install xdebug-2.9.3
+/usr/local/opt/php@7.4/bin/pecl install redis
+/usr/local/opt/php@7.4/bin/pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.3/bin:$PATH"
 export PATH="/usr/local/opt/php@7.3/sbin:$PATH"
-pecl install redis
-pecl install xdebug-2.9.3
+/usr/local/opt/php@7.3/bin/pecl install redis
+/usr/local/opt/php@7.3/bin/pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.2/bin:$PATH"
 export PATH="/usr/local/opt/php@7.2/sbin:$PATH"
-pecl install redis
-pecl install xdebug-2.9.3
+/usr/local/opt/php@7.2/bin/pecl install redis
+/usr/local/opt/php@7.2/bin/pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.1/bin:$PATH"
 export PATH="/usr/local/opt/php@7.1/sbin:$PATH"
-pecl install redis
-pecl install xdebug-2.9.3
+/usr/local/opt/php@7.1/bin/pecl install redis
+/usr/local/opt/php@7.1/bin/pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.0/bin:$PATH"
 export PATH="/usr/local/opt/php@7.0/sbin:$PATH"
-pecl install redis
-pecl install xdebug-2.9.3
+/usr/local/opt/php@7.0/bin/pecl install redis
+/usr/local/opt/php@7.0/bin/pecl install xdebug-2.9.3
 
 export PATH="/usr/local/opt/php@7.4/bin:$PATH"
 export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
@@ -151,3 +151,64 @@ ye.. That means it's EOL. You should just ignore it then.
 But make sure to change `minSupportedPhpVersion` to `7x` then in `plugins/lando-services/services/nginx/builder.js` and create a new build.
 
 You'll fall back to the slower lando version.
+
+- dyld: Library not loaded: /usr/local/opt/openssl/lib/libcrypto.1.0.0.dyli
+
+You probably installed something recently ( php 8 perhaps? ) and your openssl got
+updated. You'll need to switch to a previous openssl implementation.
+
+`brew switch openssl 1.0`
+
+This might not work, but it'll tell you which versions are installed. I bet ya
+you'll be able to use one that works.
+
+- dyld: Library not loaded: /usr/local/opt/icu4c/lib/libicui18n.64.dylib
+
+Basically the same as the one above. But for `icu4c`
+
+`brew switch icu4c 64.2`
+
+## ProTip
+
+Alias `php` to a script that loads correct versions based on your `.lando.yml` file.
+
+```sh
+#!/usr/bin/env bash
+DEFAULT_PHP_VERSION="7.3"
+
+ROOTDIR=$(pwd)
+
+if git rev-parse --git-dir > /dev/null 2>&1; then
+  ROOTDIR=$(git rev-parse --show-toplevel)
+fi
+
+PHP_VERSION="$DEFAULT_PHP_VERSION"
+if [[ -f "$ROOTDIR/.lando.yml" ]]; then
+    PHP_VERSION=$(cat "$ROOTDIR/.lando.yml" | grep "php:" | cut -d ":" -f2)
+fi
+
+PHP_VERSION=$(echo "$PHP_VERSION" | sed 's/[^0-9]*//g')
+PHP_VERSION="$(echo "$PHP_VERSION" | cut -c1,1).$(echo "$PHP_VERSION" | cut -c2,2)"
+
+if [[ ! -f "/usr/local/opt/php@$PHP_VERSION/bin/php" ]]; then
+   PHP_VERSION=${DEFAULT_PHP_VERSION}
+fi
+
+# ICU4C_VERSION=$(brew list --versions icu4c | awk -F' ' '{print $NF}')
+# Hardcoded for speed
+case "$PHP_VERSION" in
+    "7.0" | "7.1" | "7.2")
+        ICU4C_VERSION="64.2"
+        ;;
+    "7.3" | "7.4")
+        ICU4C_VERSION="66.1"
+        ;;
+esac
+
+brew switch icu4c "$ICU4C_VERSION" > /dev/null 2>&1
+
+PHP_BIN="/usr/local/opt/php@$PHP_VERSION/bin/php"
+
+${PHP_BIN} "$@"
+exit $?
+```
