@@ -1,13 +1,15 @@
 #!/bin/bash
 
+# Get the lando logger
+. /helpers/log.sh
+
+# Set the module
+LANDO_MODULE="sqlexport"
+
 # Set generic things
 HOST=localhost
+SERVICE=$LANDO_SERVICE_NAME
 STDOUT=false
-
-# colors
-GREEN='\033[0;32m'
-RED='\033[31m'
-DEFAULT_COLOR='\033[0;0m'
 
 # Get type-specific config
 if [[ ${POSTGRES_DB} != '' ]]; then
@@ -29,10 +31,8 @@ while (( "$#" )); do
   case "$1" in
     -h|--host|--host=*)
       if [ "${1##--host=}" != "$1" ]; then
-        HOST="${1#*=}"
         shift
       else
-        HOST="$2"
         shift 2
       fi
       ;;
@@ -57,7 +57,11 @@ while (( "$#" )); do
       shift
       ;;
     *)
-      FILE="$(pwd)/$1"
+      if [[ "$1" = /* ]]; then
+        FILE="${1//\\//}"
+      else
+        FILE="$(pwd)/${1//\\//}"
+      fi
       shift
       ;;
   esac
@@ -67,13 +71,15 @@ done
 if [[ ${POSTGRES_DB} != '' ]]; then
   DUMPER="pg_dump postgresql://$USER@localhost:$PORT/$DATABASE"
 else
-  DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${DATABASE}"
+  DUMPER="mysqldump --opt --user=${USER} --host=${HOST} --port=${PORT} ${LANDO_EXTRA_DB_EXPORT_ARGS} ${DATABASE}"
 fi
 
 # Do the dump to stdout
 if [ "$STDOUT" == "true" ]; then
   $DUMPER
 else
+  # Inform the user of things
+  echo "Preparing to export $FILE from database '$DATABASE' on service '$SERVICE' as user $USER..."
 
   # Clean up last dump before we dump again
   unalias rm 2> /dev/null
@@ -83,7 +89,7 @@ else
   # Show the user the result
   if [ $? -ne 0 ]; then
     rm ${FILE}
-    echo -e "${RED}Failed ${DEFAULT_COLOR}to create file: ${FILE}"
+    lando_red "Failed to create file: ${FILE}"
     exit 1
   else
     # Gzip the mysql database dump file
@@ -93,6 +99,6 @@ else
       chown $LANDO_HOST_UID:$LANDO_HOST_GID "${FILE}.gz"
     fi
     # Report
-    echo -e "${GREEN}Success${DEFAULT_COLOR} ${FILE}.gz was created!"
+    lando_green "Success ${FILE}.gz was created!"
   fi
 fi

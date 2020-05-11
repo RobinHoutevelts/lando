@@ -86,7 +86,7 @@ lando update-deps
 
 ### Multi-command tooling
 
-`cmd` can also be an array. This allows you to chain an indefinate amount of commands together.
+`cmd` can also be an array. This allows you to chain an indefinite amount of commands together.
 
 ```yaml
 tooling:
@@ -253,6 +253,22 @@ For example, if you wanted to override the built in `drush` command that comes w
 tooling:
   drush:
     cmd: "/app/vendor/bin/drush --root=/app/web"
+```
+
+Note that if your upstream tooling has interactive options you will need to either disable those options completely or set appropriate defaults to bypass them.
+
+```yaml
+tooling:
+  # Remove upstream options altogether
+  pull:
+    cmd: echo "Yah right imma gonna let you run this command"
+    options:
+  # Modify upstream options
+  push:
+    cmd: /helpers/my-special-push.sh
+    options:
+      code:
+        default: none
 ```
 
 ## Disabling
