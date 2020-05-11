@@ -33,6 +33,8 @@ echo 'export PATH="/usr/local/opt/mysql-client/bin:$PATH"' >> ~/.zshrc
 
 Let's first install some php on your machine
 
+If you already have `7.3` and want to install `7.4` you'll need to run `brew upgrade php`
+
 ```
 brew tap exolnet/homebrew-deprecated
 
@@ -158,6 +160,8 @@ You probably installed something recently ( php 8 perhaps? ) and your openssl go
 updated. You'll need to switch to a previous openssl implementation.
 
 `brew switch openssl 1.0`
+
+or if fnm stopped working: `brew upgrade Shiz/tap/fnm`
 
 This might not work, but it'll tell you which versions are installed. I bet ya
 you'll be able to use one that works.
