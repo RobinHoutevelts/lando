@@ -19,6 +19,12 @@ server {
 
   root "{{LANDO_WEBROOT}}";
 
+  # CSS, JS and Images
+  location ~* \.(?:js|css|png|jpg|jpeg|gif|ico|svg)$ {
+    access_log off;
+    add_header Cache-Control "max-age=3600, public, s-maxage=31536000";
+  }
+
   location = /favicon.ico {
       log_not_found off;
       access_log off;
