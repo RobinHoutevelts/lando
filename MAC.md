@@ -110,6 +110,8 @@ xdebug.remote_port=9000
 extension="redis.so"
 ```
 
+Also increase your max memory from 128M to 1G
+
 *Perform the same steps also for php 7.0, 7.1, 7.2 and 7.3 ( they each have their own php.ini file)*
 
 ### Configure php-fpm
@@ -135,11 +137,11 @@ Do the same for php 7.0, 7.1, 7.2 and 7.3 but use ports `9170`, `9171`, `9172`, 
 ### Restart the services
 
 ```
-sudo brew services restart php
-sudo brew services restart php@7.3
-sudo brew services restart php@7.2
-sudo brew services restart php@7.1
-sudo brew services restart php@7.0
+brew services restart php
+brew services restart php@7.3
+brew services restart php@7.2
+brew services restart php@7.1
+brew services restart php@7.0
 ```
 
 
@@ -176,7 +178,7 @@ Alias `php` to a script that loads correct versions based on your `.lando.yml` f
 
 ```sh
 #!/usr/bin/env bash
-DEFAULT_PHP_VERSION="7.3"
+DEFAULT_PHP_VERSION="7.4"
 
 ROOTDIR=$(pwd)
 
@@ -198,16 +200,16 @@ fi
 
 # ICU4C_VERSION=$(brew list --versions icu4c | awk -F' ' '{print $NF}')
 # Hardcoded for speed
-case "$PHP_VERSION" in
-    "7.0" | "7.1" | "7.2")
-        ICU4C_VERSION="64.2"
-        ;;
-    "7.3" | "7.4")
-        ICU4C_VERSION="66.1"
-        ;;
-esac
+#case "$PHP_VERSION" in
+#    "7.0" | "7.1" | "7.2")
+#        ICU4C_VERSION="64.2"
+#        ;;
+#    "7.3" | "7.4")
+#        ICU4C_VERSION="66.1"
+#        ;;
+#esac
 
-brew switch icu4c "$ICU4C_VERSION" > /dev/null 2>&1
+#brew switch icu4c "$ICU4C_VERSION" > /dev/null 2>&1
 
 PHP_BIN="/usr/local/opt/php@$PHP_VERSION/bin/php"
 
