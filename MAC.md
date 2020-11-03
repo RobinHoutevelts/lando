@@ -33,16 +33,14 @@ echo 'export PATH="/usr/local/opt/mysql-client/bin:$PATH"' >> ~/.zshrc
 
 Let's first install some php on your machine
 
-If you already have `7.3` and want to install `7.4` you'll need to run `brew upgrade php`
-
 ```
-brew tap exolnet/homebrew-deprecated
+brew tap shivammathur/php
 
-brew install php@7.4
-brew install php@7.3
-brew install php@7.2
-brew install php@7.1
-brew install php@7.0
+brew install shivammathur/php/php@7.4
+brew install shivammathur/php/php@7.3
+brew install shivammathur/php/php@7.2
+brew install shivammathur/php/php@7.1
+brew install shivammathur/php/php@7.0
 ```
 
 Then install some much-needed modules.
