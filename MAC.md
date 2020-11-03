@@ -46,33 +46,20 @@ brew install shivammathur/php/php@7.0
 Then install some much-needed modules.
 
 ```
-export PATH="/usr/local/opt/php@7.4/bin:$PATH"
-export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
 /usr/local/opt/php@7.4/bin/pecl install redis
 /usr/local/opt/php@7.4/bin/pecl install xdebug-2.9.3
 
-export PATH="/usr/local/opt/php@7.3/bin:$PATH"
-export PATH="/usr/local/opt/php@7.3/sbin:$PATH"
 /usr/local/opt/php@7.3/bin/pecl install redis
 /usr/local/opt/php@7.3/bin/pecl install xdebug-2.9.3
 
-export PATH="/usr/local/opt/php@7.2/bin:$PATH"
-export PATH="/usr/local/opt/php@7.2/sbin:$PATH"
 /usr/local/opt/php@7.2/bin/pecl install redis
 /usr/local/opt/php@7.2/bin/pecl install xdebug-2.9.3
 
-export PATH="/usr/local/opt/php@7.1/bin:$PATH"
-export PATH="/usr/local/opt/php@7.1/sbin:$PATH"
 /usr/local/opt/php@7.1/bin/pecl install redis
 /usr/local/opt/php@7.1/bin/pecl install xdebug-2.9.3
 
-export PATH="/usr/local/opt/php@7.0/bin:$PATH"
-export PATH="/usr/local/opt/php@7.0/sbin:$PATH"
 /usr/local/opt/php@7.0/bin/pecl install redis
-/usr/local/opt/php@7.0/bin/pecl install xdebug-2.9.3
-
-export PATH="/usr/local/opt/php@7.4/bin:$PATH"
-export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
+/usr/local/opt/php@7.0/bin/pecl install xdebug-2.8.1
 ```
 
 Let's make sure your default php version is 7.4
