@@ -51,6 +51,10 @@ lando drush version
 cd drupal7
 lando terminus -V
 
+# Should use composer 2.x
+cd drupal7
+lando composer --version | grep Composer | grep 2.
+
 # Should be logged in
 cd drupal7
 lando terminus auth:whoami | grep landobot@devwithlando.io
@@ -114,12 +118,17 @@ lando php -m | grep xdebug || echo $? | grep 1
 cd drupal7
 curl -LI http://landobot-drupal7.lndo.site | grep Via | grep varnish-v4
 
+# Should be running nginx 1.16
+cd drupal7
+lando ssh -s appserver_nginx -c "/opt/bitnami/nginx/sbin/nginx -v 2>&1 | grep 1.16"
+
 # Should have a running solr instance
 cd drupal7
 lando ssh -s appserver -c "curl https://index:449/sites/self/environments/lando/index/admin/"
 
 # Should be able to push commits to pantheon
 cd drupal7
+lando pull --code dev --database none --files none
 lando ssh -s appserver -c "git rev-parse HEAD > test.log"
 lando push --code dev --database none --files none --message "Testing commit $(git rev-parse HEAD)"
 

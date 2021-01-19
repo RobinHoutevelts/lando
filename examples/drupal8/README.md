@@ -16,7 +16,7 @@ lando poweroff
 
 # Should initialize the latest Drupal 8 codebase
 rm -rf drupal8 && mkdir -p drupal8 && cd drupal8
-lando init --source remote --remote-url https://www.drupal.org/download-latest/tar.gz --remote-options="--strip-components 1" --recipe drupal8 --webroot . --name lando-drupal8 --option database=mysql:8.0 --option drush=10.2.1
+lando init --source remote --remote-url https://ftp.drupal.org/files/projects/drupal-8.9.0.tar.gz --remote-options="--strip-components 1" --recipe drupal8 --webroot . --name lando-drupal8 --option database=mysql:8.0
 
 # Should copy in the .lando.local.yml
 cp -f .lando.local.yml drupal8/.lando.local.yml
@@ -36,9 +36,9 @@ Run the following commands to validate things are rolling as they should.
 cd drupal8
 lando ssh -s appserver -c "curl -L localhost" | grep "Drupal 8"
 
-# Should use 7.2 as the default php version
+# Should use 7.3 as the default php version
 cd drupal8
-lando php -v | grep "PHP 7.2"
+lando php -v | grep "PHP 7.3"
 
 # Should be running apache 2.4 by default
 cd drupal8

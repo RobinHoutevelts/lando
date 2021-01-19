@@ -68,7 +68,7 @@ fi
 # Scan the following directories for keys and filter out non-private keys
 for SSH_DIR in "${SSH_DIRS[@]}"; do
   lando_info "Scanning $SSH_DIR for keys..."
-  readarray -t RAW_LIST < <(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -group $GROUP -type f)
+  readarray -t RAW_LIST < <(find "$SSH_DIR" -maxdepth 1 -not -name '*.pub' -not -name 'known_hosts' -user $LANDO_WEBROOT_USER -type f)
   for RAW_KEY in "${RAW_LIST[@]}"; do
     SSH_CANDIDATES+=("$RAW_KEY")
   done
@@ -88,13 +88,15 @@ lando_info "Found keys ${SSH_CANDIDATES[*]}"
 for SSH_CANDIDATE in "${SSH_CANDIDATES[@]}"; do
   lando_debug "Ensuring permissions and ownership of $SSH_CANDIDATE..."
   chown -R $LANDO_WEBROOT_USER:$GROUP "$SSH_CANDIDATE"
-  chmod 700 "$SSH_CANDIDATE"
-  # chmod 644 "$SSH_CANDIDATE.pub" || true
+  chmod 600 "$SSH_CANDIDATE"
   lando_debug "Checking whether $SSH_CANDIDATE is a private key..."
   if grep -L "PRIVATE KEY" "$SSH_CANDIDATE" &> /dev/null; then
     if command -v ssh-keygen >/dev/null 2>&1; then
       lando_debug "Checking whether $SSH_CANDIDATE is formatted correctly..."
       if ssh-keygen -l -f "$SSH_CANDIDATE" &> /dev/null; then
+        SSH_KEYS+=("$SSH_CANDIDATE")
+        SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
+      elif ssh-keygen -y -e -f "$SSH_CANDIDATE" &> /dev/null; then
         SSH_KEYS+=("$SSH_CANDIDATE")
         SSH_IDENTITIES+=("  IdentityFile \"$SSH_CANDIDATE\"")
       fi

@@ -30,6 +30,7 @@ module.exports = {
         config = {},
         data = `data_${name}`,
         dataHome = `home_${name}`,
+        entrypoint = '/lando-entrypoint.sh',
         home = '',
         moreHttpPorts = [],
         info = {},
@@ -47,6 +48,7 @@ module.exports = {
         ssl = false,
         sslExpose = true,
         supported = ['custom'],
+        supportedIgnore = false,
         root = '',
         webroot = '/app',
       } = {},
@@ -57,13 +59,13 @@ module.exports = {
 
       // If this version is not supported throw an error
       // @TODO: get this someplace else for unit tezting
-      if (!_.includes(supported, version)) {
+      if (!supportedIgnore && !_.includes(supported, version)) {
         if (!patchesSupported || !_.includes(utils.stripWild(supported), utils.stripPatch(version))) {
           throw Error(`${type} version ${version} is not supported`);
         }
       }
       if (_.includes(legacy, version)) {
-        console.log(chalk.yellow(`${type} version ${version} is a legacy version! We recommend upgrading.`));
+        console.error(chalk.yellow(`${type} version ${version} is a legacy version! We recommend upgrading.`));
       }
 
       // Move our config into the userconfroot if we have some
@@ -73,15 +75,15 @@ module.exports = {
 
       // Get some basic locations
       const scriptsDir = path.join(userConfRoot, 'scripts');
-      const entrypoint = path.join(scriptsDir, 'lando-entrypoint.sh');
+      const entrypointScript = path.join(scriptsDir, 'lando-entrypoint.sh');
       const addCertsScript = path.join(scriptsDir, 'add-cert.sh');
       const refreshCertsScript = path.join(scriptsDir, 'refresh-certs.sh');
 
       // Handle volumes
       const volumes = [
-        `${userConfRoot}:/lando:delegated`,
+        `${userConfRoot}:/lando:cached`,
         `${scriptsDir}:/helpers`,
-        `${entrypoint}:/lando-entrypoint.sh`,
+        `${entrypointScript}:/lando-entrypoint.sh`,
         `${dataHome}:/var/www`,
       ];
 
@@ -92,7 +94,7 @@ module.exports = {
       }
 
       // Add in some more dirz if it makes sense
-      if (home) volumes.push(`${home}:/user:delegated`);
+      if (home) volumes.push(`${home}:/user:cached`);
 
       // Handle cert refresh
       // @TODO: this might only be relevant to the proxy, if so let's move it there
@@ -130,7 +132,7 @@ module.exports = {
       _.set(namedVols, dataHome, {});
       sources.push({
         services: _.set({}, name, {
-          entrypoint: '/lando-entrypoint.sh',
+          entrypoint,
           environment,
           labels,
           logging,

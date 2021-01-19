@@ -71,7 +71,7 @@ lando config --help | grep verbose
 lando config --lando | grep verbose
 
 # Should return the version
-lando version | grep 3.0.0
+lando version | grep "v3.0."
 
 # Should run with specified verbosity
 lando info -v | grep INFO
@@ -195,6 +195,9 @@ lando --channel orange || echo $? | grep 1
 
 # Should load experimental plugins by default in CI
 lando config | grep experimentalPluginLoadTest | grep true
+
+# Should load plugins from pluginDirs
+lando stuff | grep "I WORKED"
 ```
 
 Destroy tests

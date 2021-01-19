@@ -45,11 +45,11 @@ module.exports = {
   name: 'backdrop',
   parent: '_drupaly',
   config: {
-    backdrush: '1.2.0',
+    backdrush: '1.4.0',
     build: [],
     confSrc: __dirname,
     defaultFiles: {},
-    drush: '8.3.2',
+    drush: '8.3.5',
     php: '7.2',
     services: {appserver: {overrides: {
       environment: {

@@ -13,22 +13,23 @@ add_user() {
   local UID=$3
   local GID=$4
   local DISTRO=$5
+  local EXTRAS="$6"
   if [ "$DISTRO" = "alpine" ]; then
-    groups | grep "$GROUP" > /dev/null || addgroup -g "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" > /dev/null || adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null
+    if ! groups | grep "$GROUP" > /dev/null 2>&1; then addgroup -g "$GID" "$GROUP" 2>/dev/null; fi
+    if ! id -u "$GROUP" > /dev/null 2>&1; then adduser -H -D -G "$GROUP" -u "$UID" "$USER" "$GROUP" 2>/dev/null; fi
   else
-    groups | grep "$GROUP" > /dev/null || groupadd --force --gid "$GID" "$GROUP" 2>/dev/null
-    id -u "$GROUP" > /dev/null || useradd --gid "$GID" -M -N --uid "$UID" "$USER" 2>/dev/null
+    if ! groups | grep "$GROUP" > /dev/null 2>&1; then groupadd --force --gid "$GID" "$GROUP" 2>/dev/null; fi
+    if ! id -u "$GROUP" > /dev/null 2>&1; then useradd --gid "$GID" --uid "$UID" $EXTRAS "$USER" 2>/dev/null; fi
   fi;
 }
 
-# Veridy user
+# Verify user
 verify_user() {
   local USER=$1
   local GROUP=$2
   local DISTRO=$3
-  id -u "$USER" > /dev/null
-  groups | grep "$GROUP" > /dev/null
+  id -u "$USER" > /dev/null 2>&1
+  groups | grep "$GROUP" > /dev/null 2>&1
   if [ "$DISTRO" = "alpine" ]; then
     true
     # is there a chsh we can use? do we need to?
@@ -87,19 +88,19 @@ perm_sweep() {
   fi
 
   # Do a background sweep
-  nohup chown -R $USER:$GROUP /app >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /var/www/.ssh >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /user/.ssh >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /var/www >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /usr/local/bin >/dev/null 2>&1 &
+  nohup find /app -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /var/www/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /user/.ssh -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /var/www -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local/bin -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
   nohup chmod -R 755 /var/www >/dev/null 2>&1 &
 
   # Lets also make some /usr/locals chowned
-  nohup chown -R $USER:$GROUP /usr/local/lib >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /usr/local/share >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /usr/local >/dev/null 2>&1 &
+  nohup find /usr/local/lib -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local/share -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /usr/local -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
 
   # Make sure we chown the $USER home directory
-  nohup chown -R $USER:$GROUP $(getent passwd $USER | cut -d : -f 6) >/dev/null 2>&1 &
-  nohup chown -R $USER:$GROUP /lando >/dev/null 2>&1 &
+  nohup find $(getent passwd $USER | cut -d : -f 6) -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
+  nohup find /lando -not -user $USER -execdir chown $USER:$GROUP {} \+ > /tmp/perms.out 2> /tmp/perms.err &
 }

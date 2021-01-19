@@ -18,7 +18,7 @@ lando poweroff
 
 # Should initialize the lando pantheon test drupal8 site
 rm -rf drupal8 && mkdir -p drupal8 && cd drupal8
-lando init --source pantheon --pantheon-auth "$PANTHEON_MACHINE_TOKEN" --pantheon-site landobot-drupal8
+lando init --source pantheon --pantheon-auth "$PANTHEON_MACHINE_TOKEN" --pantheon-site landobot-drupal8 --option composer_version=1.10.1
 
 # Should start up our drupal8 site successfully
 cd drupal8
@@ -94,6 +94,7 @@ lando php -m | grep xdebug || echo $? | grep 1
 
 # Should be able to push commits to pantheon
 cd drupal8
+lando pull --code dev --database none --files none
 lando ssh -s appserver -c "git rev-parse HEAD > test.log"
 lando push --code dev --database none --files none --message "Testing commit $(git rev-parse HEAD)"
 

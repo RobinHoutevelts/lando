@@ -32,7 +32,7 @@ Note that Lando is basically a PaaS running on your computer and as such we don'
 
 You _can_ run Lando using the below but your experience may be less than ideal.
 
-*   2-core processor
+*   2-core **x86-compat** processor
 *   4GB+ RAM
 *   25GB+ of available disk space
 
@@ -133,6 +133,8 @@ We set `docker-ce` as a hard dependency for our packages. This means if you have
 ```bash
 dpkg -i --ignore-depends=docker-ce lando-stable.deb
 ```
+
+After installing lando this way, you may need to edit the `/var/lib/dpkg/status` file and remove `docker-ce` from the lando package dependency list in order for future `apt` related commands to work. Great care should be taken while editting this file!!!.
 
 We are currently considering whether to support alternate means of installing Docker such as with [moby-engine](https://github.com/lando/lando/issues/1294)
 

@@ -70,6 +70,11 @@ if ! [ -x "$(command -v openssl)" ]; then
   apt-get update -y && apt-get install openssl -y || apk add --no-cache openssl
 fi
 
+# Make sure the LANDO_CA_CERT exists
+if [ ! -f $LANDO_CA_CERT ]; then
+  /helpers/setup-ca.sh
+fi
+
 # Validate the certs against the root CA
 if [ -f "/certs/cert.pem" ] && ! openssl verify -CAfile $LANDO_CA_CERT /certs/cert.pem >/dev/null; then
   lando_info "Certs are not valid! Lets remove them."
@@ -117,6 +122,9 @@ cp -f /certs/cert.key "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.k
 # breaking changes
 cp -f /certs/cert.crt /certs/server.crt
 cp -f /certs/cert.key /certs/server.key
+# Set the cert and key on host to host-uid/gid ownership
+chown "$LANDO_HOST_UID:$LANDO_HOST_GID" "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.crt"
+chown "$LANDO_HOST_UID:$LANDO_HOST_GID" "/lando/certs/${LANDO_SERVICE_NAME}.${LANDO_APP_PROJECT}.key"
 
 # Trust our root CA
 if [ ! -f "$CA_CERT_CONTAINER" ]; then

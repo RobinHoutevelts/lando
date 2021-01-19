@@ -16,7 +16,7 @@ module.exports = {
   config: {
     confSrc: __dirname,
     defaultFiles: {},
-    php: '7.2',
+    php: '7.3',
     drupal: true,
     database: 'mariadb',
     via: 'nginx',

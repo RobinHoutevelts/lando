@@ -6,7 +6,7 @@ const _ = require('lodash');
 const argv = require('yargs').argv;
 const fs = require('fs-extra');
 const Log = require('./../lib/logger');
-const log = new Log({logLevelConsole: 'debug'});
+const log = new Log({logLevelConsole: 'debug', logName: 'pkg'});
 const path = require('path');
 const Promise = require('bluebird');
 const Shell = require('./../lib/shell');
@@ -27,6 +27,7 @@ const files = {
     buildSrc: [
       path.resolve('bin'),
       path.resolve('experimental'),
+      path.resolve('integrations'),
       path.resolve('lib'),
       path.resolve('plugins'),
       path.resolve('config.yml'),
