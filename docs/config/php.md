@@ -1,10 +1,10 @@
 ---
-description: Add a highly configurable php service to Lando for local development with all the power of Docker and Docker Compose; comes with composer and xdebug and multiple verions for lols.
+description: Add a highly configurable php service to Lando for local development with all the power of Docker and Docker Compose; comes with composer, xdebug and multiple versions for lols.
 ---
 
 # PHP
 
-[PHP](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md)
+[PHP](http://php.net/) is a popular scripting language that is especially suited for web development. It is often served by either [apache](./apache.md) or [nginx](./nginx.md).
 
 You can easily add it to your Lando app by adding an entry to the [services](./../config/services.md) top-level config in your [Landofile](./../config/lando.md).
 
@@ -12,8 +12,9 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 
 ## Supported versions
 
-*   [7.4](https://hub.docker.com/r/devwithlando/php)
-*   **[7.3](https://hub.docker.com/r/devwithlando/php)** **(default)**
+*   [8.0](https://hub.docker.com/r/devwithlando/php)
+*   **[7.4](https://hub.docker.com/r/devwithlando/php)** **(default)**
+*   [7.3](https://hub.docker.com/r/devwithlando/php)
 *   [7.2](https://hub.docker.com/r/devwithlando/php)
 *   [7.1](https://hub.docker.com/r/devwithlando/php)
 *   [7.0](https://hub.docker.com/r/devwithlando/php)
@@ -23,10 +24,10 @@ You can easily add it to your Lando app by adding an entry to the [services](./.
 ## Legacy versions
 
 ::: warning Using Unsupported PHP Versions!
-While you can currently use some [EOL php version](http://php.net/supported-versions.php) with Lando it's worth noting that we also do not support such versions so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
+While you can currently use some [EOL php version](http://php.net/supported-versions.php) with Lando, it's worth noting that we also do not support such versions, so your mileage may vary. If you are having issues with unsupported versions and open a ticket about it, the most likely response you will get is "upgrade to a supported version".
 :::
 
-You can still run these versions with Lando but for all intents and purposes they should be considered deprecated eg YMMV and do not expect a ton of support if you have an issue.
+You can still run these versions with Lando but for all intents and purposes they should be considered deprecated (e.g. YMMV and do not expect a ton of support if you have an issue).
 
 *   [5.5](https://hub.docker.com/r/devwithlando/php)
 *   [5.4](https://hub.docker.com/r/devwithlando/php)
@@ -34,25 +35,28 @@ You can still run these versions with Lando but for all intents and purposes the
 
 ## Patch versions
 
-Because we use our own custom images for `php` specifying a patch version is not currently supported.
+Because we use our own custom images for `php`, specifying a patch version is not currently supported.
 
-If you **really** need to lock down to a patch vesrion you could consider using either a [custom compose service](./compose.md) or a service [overrides](./../config/services.md#overrides).
+If you **really** need to lock down to a patch version, you could consider using either a [custom compose service](./compose.md) or a service [overrides](./../config/services.md#overrides).
 
 ## Configuration
 
-Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
+Here are the configuration options, set to the default values, for this service. If you are unsure about where this goes or what this means, we *highly recommend* scanning the [services documentation](./../config/services.md) to get a good handle on how the magicks work.
 
-Also note that the below options are in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service.
+Also note that options, in addition to the [build steps](./../config/services.md#build-steps) and [overrides](./../config/services.md#overrides) that are available to every service, are shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php:7.3
     via: apache:2.4
     ssl: false
     webroot: .
     xdebug: false
     composer: []
+    composer_version: '2.0.7'
+    # Below only valid for via: cli
+    command: tail -f /dev/null
     config:
       php: SEE BELOW
       server: SEE BELOW
@@ -61,15 +65,15 @@ services:
 
 ### Choosing a server, or no server
 
-By default `php` services will be served by the default version of our [apache](./apache.md) service but you can switch this to either `nginx` or `cli`.
+By default, `php` services will be served by the default version of our [apache](./apache.md) service but you can switch this to either `nginx` or `cli`.
 
-Like with `apache`, `nginx` will use the the default version of our [nginx](./nginx.md) service while `cli` will just spin up a `php` container without a webserver. The latter is useful if you just want to work on a CLI utility or lock down what version `composer` runs with.
+Like with `apache`, `nginx` will use the the default version of our [nginx](./nginx.md) service while `cli` will just spin up a `php` container without a web server. The latter is useful if you just want to work on a CLI utility or lock down what version `composer` runs with.
 
 #### With Apache (default)
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     via: apache
 ```
@@ -78,35 +82,84 @@ services:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     via: nginx
 ```
 
-** As CLI **
+#### As CLI
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     via: cli
 ```
 
-### Toggling xdebug
+In CLI mode you can optionally tell the php cli service to boot up with an arbitrary command, this is good for php worker services like queues.
 
-You can enable the `xdebug` extension by setting `xdebug: true`. Lando will also automatically configure `xdebug.remote_enable` and `xdebug.remote_host` for you. This means that `xdebug` should be *ready to receive connections* out of the box.
+```yaml
+services:
+  myservice:
+    type: php
+    via: cli
+    command: php /app/src/artisan horizon
+```
 
-Note that unlike in previous versions of Lando `xdebug: false` will now disable the `xdebug` extension instead of just disabling `xdebug.remote_enable`
+### Using xdebug
+
+You can enable the `xdebug` extension by setting `xdebug: true` and doing a `lando rebuild`. When the extension is enabled Lando will automatically set the needed configuration for remote debugging. This means that `xdebug` _should_ be ready to receive connections out of the box.
+
+If you are using `xdebug` version 3, which is installed by default for `php` 7.2+ you can optionally specify the mode.
+
+```yaml
+services:
+  myservice:
+    type: php:7.3
+    xdebug: "debug,develop"
+```
+
+For this version of `xdebug` setting `xdebug: true` will set `xdebug.mode=debug`. You can read more about `xdebug.mode` [here](https://xdebug.org/docs/all_settings#mode).
+
+#### Configuring xdebug
+
+If you'd like to override Lando's out of the box `xdebug` config the easiest way to do that is by setting the `XDEBUG_CONFIG` environment variable as a service level override.
+
+```yaml
+services:
+  myservice:
+    type: php:7.3
+    xdebug: "debug,develop"
+    overrides:
+      environment:
+        XDEBUG_CONFIG: "discover_client_host=0 client_host=localhost"
+```
+
+Note that you cannot set _every_ `xdebug` configuration option via `XDEBUG_CONFIG`, see [this](https://xdebug.org/docs/all_settings). If you need to configure something outside of the scope of `XDEBUG_CONFIG` we recommend you use a custom `php.ini`.
+
+You can also modify or unset `XDEBUG_MODE` in a similar way. For example if you wanted to manage `xdebug.mode` in your own `php.ini` you could so something like
+
+```yaml
+services:
+  myservice:
+    type: php:7.3
+    xdebug: true
+    overrides:
+      environment:
+        XDEBUG_MODE:
+    config:
+      php: config/php.ini
+```
 
 #### Setting up your IDE for XDEBUG
 
-While Lando will handle the server side configuration for you, there is often a considerable amount of pain lurking in the client side configuration. To that end here is some helpful info about a few popular clients.
+While Lando will handle the server side configuration for you, there is often a considerable amount of pain lurking in the client side configuration. To that end, some helpful info about a few popular clients is shown below:
 
 **ATOM**
 
-Here is some example config for [ATOM's](https://atom.io/) [`php-debug`](https://github.com/gwomacks/php-debug) plugin:
+An example config for [ATOM's](https://atom.io/) [`php-debug`](https://github.com/gwomacks/php-debug) plugin is shown below:
 
-```
+```json
 "php-debug":
   {
     ServerPort: 9000
@@ -128,7 +181,7 @@ The first part of a pathmap will be the location of your code in the container. 
 If you are visiting your site and xdebug is not triggering, it might be worth appending `?XDEBUG_SESSION_START=LANDO` to your request and seeing if that does the trick.
 :::
 
-If you have set `xdebug: true` in your recipe or service config and run `lando rebuild` but are still having issues getting `xdebug` to work correctly we recommend that you remove `xdebug: true`, run `lando rebuild` and then set the relevant `xdebug` config directly using a custom a `php.ini` (see examples above on how to set a custom config file). Your config file should minimally include something like below.
+If you have set `xdebug: true` in your recipe or service config and run `lando rebuild` but are still having issues getting `xdebug` to work correctly, we recommend that you remove `xdebug: true`, run `lando rebuild` and then set the relevant `xdebug` config directly using a custom a `php.ini` (see examples above on how to set a custom config file). Your config file should minimally include something as shown below:
 
 ```yaml
 xdebug.max_nesting_level = 256
@@ -140,31 +193,60 @@ xdebug.remote_host = YOUR HOST IP ADDRESS
 
 You can use `lando info --deep | grep IPAddress` to help discover the correct host ip address but please note that this can change and will likely differ from dev to dev.
 
+### Installing composer
+
+As of Lando `3.0.17` you can configure the version of `composer` you would like to install. This _should_ respect any of the versions listed on the [Composer download page](https://getcomposer.org/download/) but it is required you specify down to the patch version.
+
+```yaml
+services:
+  myservice:
+    type: php
+    composer_version: "1.10.1"
+```
+
+You can also choose to ignore the `composer` install step by setting `composer_version: false`. This will use whatever version of `composer` was last bundled with our `php` image. The following "convenience flags" are also available:
+
+```yaml
+# Install the latest stable 1.x version
+composer_version: 1
+composer_version: 1-latest
+
+# Install the latest stable 2.x version
+composer_version: 2
+composer_version: 2-latest
+
+# Install latest pre-release version
+composer_version: preview
+
+# Install latest commit
+composer_version: snapshot
+```
+
 ### Installing global dependencies
 
 You can also use the `composer` key if you need to require any [global composer dependenices](https://getcomposer.org/doc/03-cli.md#require). This follows the same syntax as your normal [`composer.json`](https://getcomposer.org/doc/01-basic-usage.md#composer-json-project-setup) except written as YAML instead of JSON.
 
 ::: tip Use composer.json if you can
-While there are some legitimate use cases to globally install a composer dependency it is almost always preferred to install using your applications normal `composer.json` and then running either `lando composer install` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
+While there are some legitimate use cases to globally install a composer dependency, it is almost always preferred to install using your applications normal `composer.json` and then running either `lando composer install` or alternatively setting up a [build step](./../config/services.md#build-steps) that will automatically run before your app starts up.
 
-Note that both `lando composer` is not provided out of the box by the `php` service and need to be manually added by configuring your app's [tooling](./../config/tooling.md).
+Note that `lando composer` is not provided out of the box by the `php` service and needs to be manually added by configuring your app's [tooling](./../config/tooling.md).
 :::
 
-Here is an example of globally installing `phpunit/phpunit` `^6.5`
+An example of globally installing `phpunit/phpunit` `^6.5` is shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     composer:
       phpunit/phpunit: ^6.5
 ```
 
-Here is an example of using a [build step](./../config/services.md#build-steps) to automatically `composer install` your dependencies before your app starts.
+An example of using a [build step](./../config/services.md#build-steps) to automatically `composer install` your dependencies before your app starts is shown below:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     build:
       - composer install
@@ -174,7 +256,7 @@ services:
 
 You may need to override our [default php config](https://github.com/lando/lando/tree/master/plugins/lando-services/services/php) with your own.
 
-If you do this you must use files that exists inside your applicaton and express them relative to your project root as below.
+If you do this, you must use files that exist inside your application and express them relative to your project root as shown below:
 
 Note that the default files may change based on how you set both `ssl` and `via`. Also note that the `vhosts` and `server` config will be either for `apache` or `nginx` depending on how you set `via`. We *highly recommend* you check out both the [apache](./apache.md#configuration) and [nginx](./nginx.md#configuration) if you plan to use a custom `vhosts` or `server` config.
 
@@ -182,7 +264,7 @@ If you set `via: cli` then, as you might suspect, `vhosts` and/or `server` is no
 
 **A hypothetical project**
 
-Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory in the below example but you can call it whatever you want such as `.lando`.
+Note that you can put your configuration files anywhere inside your application directory. We use a `config` directory but you can call it whatever you want such as `.lando` in the example below:
 
 ```bash
 ./
@@ -198,7 +280,7 @@ Note that you can put your configuration files anywhere inside your application 
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     config:
       php: config/php.ini
@@ -208,12 +290,13 @@ services:
 
 ## Path Considerations
 
-Lando will set the following `PATH` hierarchy for this service.
+Lando will set the `PATH` hierarchy for this service as follows:
 
 ```js
 [
   # The line below should be where your app's composer.json binaries live
   '/app/vendor/bin',
+  '/app/bin',
   '/usr/local/sbin',
   '/usr/local/bin',
   '/usr/sbin',
@@ -230,81 +313,81 @@ This is useful to note if you are not using absolute paths in any [tooling route
 
 ## Installed Extensions
 
-|           | 5.3 | 5.4 | 5.5 | 5.6 | 7.0 | 7.1 | 7.2 | 7.3 |7.4 |
-| --        | --- | --- | --- | --- | --- | --- | --- | --- |--- |
-| apc       |  X  |  X  |     |     |     |     |     |     |    |
-| apcu      |     |     |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| bcmath    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| bz2       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| calendar  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| Core      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| ctype     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| curl      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| date      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| dom       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| exif      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| fileinfo  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| filter    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| ftp       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| gd        |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| gettext   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| hash      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| iconv     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| imagick   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| imap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| intl      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| json      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| ldap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| libxml    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| mbstring  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| mcrypt    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| memcached |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| mysqli    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| mysqlnd   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| OAuth     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| OPcache   |     |     |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| openssl   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| pcntl     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| pcre      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| PDO       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| pdo_mysql |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| pdo_pgsql |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| pdo_sqlite|  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| Phar      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| posix     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| readline  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| redis     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| readline  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| Reflection|  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| session   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| SimpleXML |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| soap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| SPL       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| sqlite3   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| standard  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| tokenizer |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| xdebug    |     |     |     |     |     |     |     |     |    |
-| xml       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| xmlreader |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| xmlwriter |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| zip       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
-| zlib      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  | X  |
+|           | 5.3 | 5.4 | 5.5 | 5.6 | 7.0 | 7.1 | 7.2 | 7.3 | 7.4 | 8.0 |
+| --        | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| apc       |  X  |  X  |     |     |     |     |     |     |     |     |
+| apcu      |     |     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |     |
+| bcmath    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| bz2       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| calendar  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| Core      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| ctype     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| curl      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| date      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| dom       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| exif      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| fileinfo  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| filter    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| ftp       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| gd        |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| gettext   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| hash      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| iconv     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| imagick   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |     |
+| imap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| intl      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| json      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| ldap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| libxml    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| mbstring  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| mcrypt    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| memcached |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |     |
+| mysqli    |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| mysqlnd   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| OAuth     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |     |
+| OPcache   |     |     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| openssl   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| pcntl     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| pcre      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| PDO       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| pdo_mysql |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| pdo_pgsql |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| pdo_sqlite|  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| Phar      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| posix     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| readline  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| redis     |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| readline  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| Reflection|  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| session   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| SimpleXML |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| soap      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| SPL       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| sqlite3   |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| standard  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| tokenizer |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| xdebug    |     |     |     |     |     |     |     |     |     |     |
+| xml       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| xmlreader |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| xmlwriter |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| zip       |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
+| zlib      |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |  X  |
 
-Note that `xdebug` is off by default but you can enable it on by setting your `php` services config to `xdebug: true`. Read more about this in "Configuration" above.
+Note that `xdebug` is off by default but you can enable it by setting your `php` services config to `xdebug: true`. Read more about this in "Configuration" above.
 
 ### Adding or removing extensions
 
-There are a few ways you can extend or modify our php images:
+There are a few ways you can extend or modify our php images below:
 
-* Using [build steps](./../config/services.md#build-steps)
-* Using your own image with [service overrides](./../config/services.md#overrides)
-* Building from your own local Dockerfile [service overrides](./../config/services.md#using-dockerfiles)
+* Using [build steps](./../config/services.md#build-steps).
+* Using your own image with [service overrides](./../config/services.md#overrides).
+* Building from your own local Dockerfile [service overrides](./../config/services.md#using-dockerfiles).
 
-Consider the following example that uses [build steps](./../config/services.md#build-steps) to install the `memcached` php extension.
+Consider the example that uses [build steps](./../config/services.md#build-steps) to install the `memcached` php extension as follows:
 
 ```yaml
 services:
-  my-service:
+  myservice:
     type: php
     build_as_root:
       - apt-get update -y

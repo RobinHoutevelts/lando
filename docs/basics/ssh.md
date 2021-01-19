@@ -1,13 +1,15 @@
 ---
 metaTitle: lando ssh | Lando
-description: lando ssh docker execs into a Lando service, dropping you into a shell by default or running specific comands as a given user.
+description: lando ssh docker execs into a Lando service, dropping you into a shell by default or running specific commands as a given user.
 ---
 
 # ssh
 
 Drops into a shell on a service, runs commands
 
-Optionally you can run a command directly against a specific service without dropping into a shell and as a user you specify. If you find yourself running a lot of these commands then set up a [tooling route](./../config/tooling.md) or use some bash aliases. Note that the default service is `appserver` which may or may not be defined.
+Optionally you can run a command directly against a specific service without dropping into a shell and as a user you specify. If you find yourself running a lot of these commands then set up a [tooling route](./../config/tooling.md) or use some bash aliases.
+
+Note that the default service is `appserver`. If you do not have a service called `appserver` then the first service listed in your Landofile will be used as the default.
 
 ::: tip
 Try running `lando info` from inside your app to get a list of services you can `ssh` into.
@@ -34,7 +36,6 @@ lando ssh --service appserver --user root --command "apt-get update && apt insta
 Run `lando ssh --help` to get a complete list of options defaults, choices, etc.
 
 ```bash
---clear        Clears the lando tasks cache
 --command, -c  Run a command in the service
 --help         Shows lando or delegated command help if applicable
 --service, -s  SSH into this service

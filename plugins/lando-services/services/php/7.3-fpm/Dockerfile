@@ -26,12 +26,12 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     libpng-dev \
     libpq-dev \
     libssl-dev \
+    libwebp-dev \
     libxml2-dev \
     libicu-dev \
     libzip-dev \
     mysql-client \
     openssl \
-    postgresql-client-9.6 \
     postgresql-client-10 \
     pv \
     ssh \
@@ -45,9 +45,8 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && pecl install memcached \
   && pecl install oauth-2.0.3 \
   && pecl install redis-4.2.0 \
-  && pecl install swoole-4.3.4 \
   && pecl install xdebug-2.9.3 \
-  && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr \
+  && docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr \
   && docker-php-ext-configure imap --with-imap-ssl --with-kerberos \
   && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
   && docker-php-ext-enable apcu \
@@ -55,7 +54,6 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
   && docker-php-ext-enable memcached \
   && docker-php-ext-enable oauth \
   && docker-php-ext-enable redis \
-  && docker-php-ext-enable swoole \
   && docker-php-ext-install \
     bcmath \
     bz2 \
@@ -77,7 +75,7 @@ RUN mkdir -p /usr/share/man/man1 /usr/share/man/man7 \
     gettext \
     pcntl \
   && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.9.1 \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer --version=1.10.1 \
   && php -r "unlink('composer-setup.php');" \
   && chsh -s /bin/bash www-data && mkdir -p /var/www/.composer && chown -R www-data:www-data /var/www \
   && su -c "composer global require hirak/prestissimo" -s /bin/sh www-data \

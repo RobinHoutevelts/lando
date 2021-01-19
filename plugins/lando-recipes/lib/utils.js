@@ -93,7 +93,7 @@ exports.getLampDefaults = (name = 'lamp', via = 'apache') => ({
   config: {
     confSrc: __dirname,
     database: 'mariadb',
-    php: '7.3',
+    php: '7.4',
     via,
     webroot: 'public',
     xdebug: false,

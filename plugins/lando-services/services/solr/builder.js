@@ -3,6 +3,29 @@
 // Modules
 const _ = require('lodash');
 
+// Versions
+const supportedVersions = [
+  '8.6',
+  '8.5',
+  '8.4',
+  '8.3',
+  '8.2',
+  '8.1',
+  '8.0',
+  '8',
+  '7.7',
+  '7.6',
+  '7',
+  '6.6',
+  '6',
+  '5.5',
+  '5',
+  '4.10',
+  '4',
+  '3.6',
+  '3',
+];
+
 /*
  * Helper to parse legacy solr 3 config
  */
@@ -24,6 +47,15 @@ const parse4 = options => {
   options.dataDir = '/opt/solr-4.10.4/example/solr/collection1/data';
   options.startScript = 'start-solr-4.sh';
   options.moreHttpPorts = [];
+  return options;
+};
+
+/*
+ * Helper to parse legacy solr 4 config
+ */
+const parse8 = options => {
+  options = parseElse(options);
+  options.dataDir = '/var/solr/data';
   return options;
 };
 
@@ -75,6 +107,12 @@ const parseConfig = options => {
     case '3': return parse3(options);
     case '4.10': return parse4(options);
     case '4': return parse4(options);
+    case '8.4': return parse8(options);
+    case '8.3': return parse8(options);
+    case '8.2': return parse8(options);
+    case '8.1': return parse8(options);
+    case '8.0': return parse8(options);
+    case '8': return parse8(options);
     default: return parseElse(options);
   };
 };
@@ -84,7 +122,7 @@ module.exports = {
   name: 'solr',
   config: {
     version: '7',
-    supported: ['7.6', '7', '6.6', '6', '5.5', '5', '4.10', '4', '3.6', '3'],
+    supported: supportedVersions,
     legacy: ['4.10', '4', '3.6', '3'],
     patchesSupported: true,
     command: '/start-solr.sh',

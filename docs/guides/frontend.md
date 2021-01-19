@@ -13,7 +13,7 @@ When you're done, you should be able to distribute your Lando app with a full se
 
 ## Add Node Service
 
-Assuming you're starting with a "Lando-ized" app, open the `.lando.yml` file in the root of your app directory. In this example we'll assume you're using a very basic [LAMP](./../recipes/lamp.md) recipe.
+Assuming you're starting with a "Lando-ized" app, open the `.lando.yml` file in the root of your app directory. In this example we'll assume you're using a very basic [LAMP](./../config/lamp.md) recipe.
 
 To install our frontend tooling we need to be able to run Node. Fortunately it's very easy for us to add a basic Node service to our app:
 
@@ -48,9 +48,9 @@ services:
 
 You can do the same thing for any NPM project; for example Grunt would be `grunt-cli: "latest"`. This is the equivalent to installing a package with `npm install -g project-name`.
 
-Note we've now added a further bash command to `build` to automatically run gulp every time we start the app.
+Note we've now added a another command to `build` to automatically run `gulp` every time we start the app. This, of course, assumes that the default `gulp` task is defined otherwise you should expect your build step to fail.
 
-:: tip Package Versions Are Fully Armed and Customizable
+::: tip Package Versions Are Fully Armed and Customizable
 You can lock your app tooling to whatever package version you like. Don't use node:6.10? Change to one of the other available versions in the [service documentation](./../config/node.md). And you're free to download whatever version of a global service your heart desires. For example, if you want to lock your team to something more stable than the latest gulp-cli, change that entry in `globals` to `gulp-cli:1.3.0`.
 :::
 

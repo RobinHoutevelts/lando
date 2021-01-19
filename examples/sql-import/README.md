@@ -41,6 +41,13 @@ lando ssh -s database -c "cat /tmp/iran.txt"
 lando rebuild -y
 lando mysql database -e "show tables;" | grep users
 lando psqlverify | grep users
+
+# Should be able to handle absolute paths if given
+lando db-import /data/test.sql
+
+# Should be able to dump tables with foreign key constraints
+lando db-import big-bad-dump.sql
+lando db-import big-bad-dump.sql
 ```
 
 Destroy tests

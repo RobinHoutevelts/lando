@@ -36,8 +36,8 @@ const postBuildSteps = [
  */
 module.exports = (app, lando) => {
   // Build step locl files
-  const preLockfile = app.name + '.build.lock';
-  const postLockfile = app.name + '.post-build.lock';
+  app.preLockfile = `${app.name}.build.lock`;
+  app.postLockfile = `${app.name}.post-build.lock`;
 
   // Init this early on but not before our recipes
   app.events.on('pre-init', () => {
@@ -46,10 +46,10 @@ module.exports = (app, lando) => {
     _.forEach(services, service => {
       // Throw a warning if service is not supported
       if (_.isEmpty(_.find(lando.factory.get(), {name: service.type}))) {
-        lando.log.warn('%s is not a supported service type.', service.type);
+        app.log.warn('%s is not a supported service type.', service.type);
       }
       // Log da things
-      lando.log.verbose('Building %s %s named %s', service.type, service.version, service.name);
+      app.log.verbose('building %s service %s', service.type, service.name);
       // Build da things
       // @NOTE: this also gathers app.info and build steps
       const Service = lando.factory.get(service.type);
@@ -62,20 +62,33 @@ module.exports = (app, lando) => {
   // Handle build steps
   // Go through each service and run additional build commands as needed
   app.events.on('post-init', () => {
+    // Add in build hashes
+    app.meta.lastPreBuildHash = _.trim(lando.cache.get(app.preLockfile));
+    app.meta.lastPostBuildHash = _.trim(lando.cache.get(app.postLockfile));
+    // Make sure containers for this app exist; if they don't and we have build locks, we need to kill them
     const buildServices = _.get(app, 'opts.services', app.services);
+    app.events.on('pre-start', () => {
+      return lando.engine.list({project: app.project, all: true}).then(data => {
+        if (_.isEmpty(data)) {
+          lando.cache.remove(app.preLockfile);
+          lando.cache.remove(app.postLockfile);
+        }
+      });
+    });
     // Queue up both legacy and new build steps
     app.events.on('pre-start', 100, () => {
       const preBuild = utils.filterBuildSteps(buildServices, app, preRootSteps, preBuildSteps, true);
-      return utils.runBuild(lando, preBuild, preLockfile);
+      return utils.runBuild(app, preBuild, app.preLockfile, app.configHash);
     });
     app.events.on('post-start', 100, () => {
       const postBuild = utils.filterBuildSteps(buildServices, app, postRootSteps, postBuildSteps);
-      return utils.runBuild(lando, postBuild, postLockfile);
+      return utils.runBuild(app, postBuild, app.postLockfile, app.configHash);
     });
   });
 
   // Discover portforward true info
   app.events.on('ready', () => {
+    app.log.verbose('discovering dynamic portforward info...');
     const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
     return lando.engine.list({project: app.project})
     .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
@@ -86,66 +99,82 @@ module.exports = (app, lando) => {
     }))
     .map(service => lando.engine.scan(service).then(data => {
       const key = `NetworkSettings.Ports.${service.internal}/tcp`;
-      const port = _.filter(_.get(data, key, []), forward => forward.HostIp === '0.0.0.0');
+      const port = _.filter(_.get(data, key, []), forward => forward.HostIp === lando.config.bindAddress);
       if (_.has(port[0], 'HostPort')) {
         _.set(_.find(app.info, {service: service.service}), 'external_connection.port', port[0].HostPort);
       }
     }));
   });
 
-    // Not only set the forwarded ports in 'ready' event.
-    // Also do it in post-start so the values are updated when re(started)
-    app.events.on('post-start', () => {
-        const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
-        return lando.engine.list({project: app.project})
-            .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
-            .map(service => ({
-                id: service.id,
-                service: service.service,
-                internal: _.get(_.find(app.info, {service: service.service}), 'internal_connection.port'),
-            }))
-            .map(service => lando.engine.scan(service).then(data => {
-                const key = `NetworkSettings.Ports.${service.internal}/tcp`;
-                const port = _.filter(_.get(data, key, []), forward => forward.HostIp === '0.0.0.0');
-                if (_.has(port[0], 'HostPort')) {
-                    _.set(_.find(app.info, {service: service.service}), 'external_connection.port', port[0].HostPort);
-                }
-            }));
-    });
-
-    // WIENI
-    // Update the .env of the project to use the correct DB_PORT and REDIS_PORT
-    // We do this after the app.info contains the new forwarded port values.
-    // So priority has to be higher than 0
-    // Disable it by adding to your .lando.yml:
-    // config:
-    //   updateEnvPorts: false
-    app.events.on('post-start', 10, () => {
-        const envFile = app.env.LANDO_APP_ROOT + '/.env';
-        if (
-            !_.get(app.config.config, 'updateEnvPorts', true)
-            || !fs.existsSync(envFile)
-        ) {
-            return;
+  // Not only set the forwarded ports in 'ready' event.
+  // Also do it in post-start so the values are updated when re(started)
+  app.events.on('post-start', () => {
+    const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
+    return lando.engine.list({project: app.project})
+      .filter(service => _.includes(_.flatMap(forwarders, service => service.service), service.service))
+      .map(service => ({
+        id: service.id,
+        service: service.service,
+        internal: _.get(_.find(app.info, {service: service.service}), 'internal_connection.port'),
+      }))
+      .map(service => lando.engine.scan(service).then(data => {
+        const key = `NetworkSettings.Ports.${service.internal}/tcp`;
+        const port = _.filter(_.get(data, key, []), forward => forward.HostIp === lando.config.bindAddress);
+        if (_.has(port[0], 'HostPort')) {
+          _.set(_.find(app.info, {service: service.service}), 'external_connection.port', port[0].HostPort);
         }
-        let envFileContent = fs.readFileSync(envFile).toString();
-        const originalEnvFileContent = envFileContent;
+      }));
+  });
 
-        const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
-        forwarders.forEach((service) => {
-            _.get(service, 'envPortNames', []).forEach((envName) => {
-                let r = new RegExp('^' + envName + '=.*?$', 'mgi');
-                envFileContent = envFileContent.replace(r, envName + '=' + service.external_connection.port)
-            });
-        });
-        if (envFileContent !== originalEnvFileContent) {
-            fs.writeFileSync(envFile, envFileContent);
-        }
+  // WIENI
+  // Update the .env of the project to use the correct DB_PORT and REDIS_PORT
+  // We do this after the app.info contains the new forwarded port values.
+  // So priority has to be higher than 0
+  // Disable it by adding to your .lando.yml:
+  // config:
+  //   updateEnvPorts: false
+  app.events.on('post-start', 10, () => {
+    const envFile = app.env.LANDO_APP_ROOT + '/.env';
+    if (
+      !_.get(app.config.config, 'updateEnvPorts', true)
+      || !fs.existsSync(envFile)
+    ) {
+      return;
+    }
+    let envFileContent = fs.readFileSync(envFile).toString();
+    const originalEnvFileContent = envFileContent;
+
+    const forwarders = _.filter(app.info, service => _.get(service, 'external_connection.port', false));
+    forwarders.forEach((service) => {
+      _.get(service, 'envPortNames', []).forEach((envName) => {
+        let r = new RegExp('^' + envName + '=.*?$', 'mgi');
+        envFileContent = envFileContent.replace(r, envName + '=' + service.external_connection.port)
+      });
     });
+    if (envFileContent !== originalEnvFileContent) {
+      fs.writeFileSync(envFile, envFileContent);
+    }
+  });
+
+  // Determine pullable and locally built images
+  app.events.on('pre-rebuild', () => {
+    app.log.verbose('determining pullable services...');
+    // Determine local vs pullable services
+    const whereats = _(_.get(app, 'config.services', {}))
+      .map((data, service) => ({service, isLocal: _.has(data, 'overrides.build') || _.has(data, 'services.build')}))
+      .value();
+
+    // Set local and pullys for downstream concerns
+    app.log.debug('determined pullable services', whereats);
+    app.opts = _.merge({}, app.opts, {
+      pullable: _(whereats).filter(service => !service.isLocal).map('service').value(),
+      local: _(whereats).filter(service => service.isLocal).map('service').value(),
+    });
+  });
 
   // Remove build locks on an uninstall
   app.events.on('post-uninstall', () => {
-    lando.cache.remove(preLockfile);
-    lando.cache.remove(postLockfile);
+    lando.cache.remove(app.preLockfile);
+    lando.cache.remove(app.postLockfile);
   });
 };

@@ -26,12 +26,7 @@ export default {
     };
   },
   mounted() {
-    this.$api.get('/v1/sponsors/patriot').then(response => {
-      this.patriots = response.data || [];
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    this.patriots = this.$sponsors.filter(sponsor => sponsor.type == 'patriot');
   },
 };
 </script>
@@ -40,19 +35,23 @@ export default {
 #patriots
   padding-top: 4em
   text-align: center
+  display: flex
+  flex-wrap: wrap
   .sponsor-patriot-block
-    max-width: 33%
-    display: inline-block
-    vertical-align: middle
+    display: inline-flex
     box-sizing: border-box
     padding: 2em 1em
+    flex: 3
+    align-items: center
+    justify-content: center
   .sponsor-patriot-block-header
     display: block
     margin: auto
-    max-width: 250px
     padding: 2em 1em
-    background-color: $landoBlue
+    background-color: #035785
     text-align: right
+    margin: auto
+    flex: 0 0 100%
     h4
       font-family: "Poppins", "Helvetica Neue", Arial, sans-serif
       font-size: 2.5em
@@ -61,7 +60,7 @@ export default {
   .sponsor-patriot-block-image
     img
       margin: 0
-      height: 150px
+      max-height: 150px
 @media (max-width: $MQMobile)
   #patriots
     text-align: center
@@ -85,5 +84,5 @@ export default {
     .sponsor-patriot-block-image
       img
         margin: 0
-        height: 100px
+        width: 200px
 </style>
