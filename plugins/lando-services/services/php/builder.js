@@ -152,6 +152,7 @@ module.exports = {
       if (options.hasOwnProperty('xdebug_remote_ip')) {
         xdebugRemoteIp = options.xdebug_remote_ip;
       }
+
       // Build the php
       const php = {
         image: `devwithlando/php:${options.version}-${options.image}-2`,
@@ -160,6 +161,7 @@ module.exports = {
           LANDO_WEBROOT: `/app/${options.webroot}`,
           XDEBUG_CONFIG: xdebugConfig(xdebugRemoteIp),
           XDEBUG_MODE: (options.xdebug === false) ? 'off' : options.xdebug,
+          PHP_IDE_CONFIG: `serverName=localhost`,
         }),
         networks: (_.startsWith(options.via, 'nginx')) ? {default: {aliases: ['fpm']}} : {default: {}},
         ports: (_.startsWith(options.via, 'apache') && options.version !== 'custom') ? ['80'] : [],
