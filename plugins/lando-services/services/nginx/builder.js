@@ -7,7 +7,7 @@ const _ = require('lodash');
 module.exports = {
   name: 'nginx',
   config: {
-    version: '1.17',
+    version: '1.14',
     supported: ['1.14', '1.16', '1.17', '1.18'],
     legacy: ['1.14'],
     pinPairs: {
