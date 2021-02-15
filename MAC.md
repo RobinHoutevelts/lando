@@ -88,6 +88,21 @@ This will make sure you have an xdebug that will connect to your host.
 ```
 [xdebug]
 zend_extension="xdebug.so"
+xdebug.mode=develop,debug
+xdebug.start_with_request=yes
+xdebug.client_host=localhost
+xdebug.client_port=9000
+xdebug.log_level=0
+
+[redis]
+extension="redis.so"
+```
+
+<details><summary>For xdebug 2.x</summary>
+
+```
+[xdebug]
+zend_extension="xdebug.so"
 xdebug.remote_enable=1
 xdebug.remote_autostart=1
 xdebug.remote_host=localhost
@@ -96,6 +111,8 @@ xdebug.remote_port=9000
 [redis]
 extension="redis.so"
 ```
+
+</details>
 
 Also increase your max memory from 128M to 1G
 
