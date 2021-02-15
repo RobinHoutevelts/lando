@@ -47,16 +47,16 @@ Then install some much-needed modules.
 
 ```
 /usr/local/opt/php@7.4/bin/pecl install redis
-/usr/local/opt/php@7.4/bin/pecl install xdebug-2.9.3
+/usr/local/opt/php@7.4/bin/pecl install xdebug-3.0.2
 
 /usr/local/opt/php@7.3/bin/pecl install redis
-/usr/local/opt/php@7.3/bin/pecl install xdebug-2.9.3
+/usr/local/opt/php@7.3/bin/pecl install xdebug-3.0.2
 
 /usr/local/opt/php@7.2/bin/pecl install redis
-/usr/local/opt/php@7.2/bin/pecl install xdebug-2.9.3
+/usr/local/opt/php@7.2/bin/pecl install xdebug-2.9.8
 
 /usr/local/opt/php@7.1/bin/pecl install redis
-/usr/local/opt/php@7.1/bin/pecl install xdebug-2.9.3
+/usr/local/opt/php@7.1/bin/pecl install xdebug-2.9.8
 
 /usr/local/opt/php@7.0/bin/pecl install redis
 /usr/local/opt/php@7.0/bin/pecl install xdebug-2.8.1
