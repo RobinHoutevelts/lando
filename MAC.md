@@ -186,7 +186,9 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
 fi
 
 PHP_VERSION="$DEFAULT_PHP_VERSION"
-if [[ -f "$ROOTDIR/.lando.yml" ]]; then
+if [[ -f ".lando.yml" ]]; then
+    PHP_VERSION=$(cat ".lando.yml" | grep "php:" | cut -d ":" -f2)
+elif [[ -f "$ROOTDIR/.lando.yml" ]]; then
     PHP_VERSION=$(cat "$ROOTDIR/.lando.yml" | grep "php:" | cut -d ":" -f2)
 fi
 
@@ -197,13 +199,15 @@ if [[ ! -f "/usr/local/opt/php@$PHP_VERSION/bin/php" ]]; then
    PHP_VERSION=${DEFAULT_PHP_VERSION}
 fi
 
-# ICU4C_VERSION=$(brew list --versions icu4c | awk -F' ' '{print $NF}')
-# Hardcoded for speed
+#ICU4C_VERSION=$(brew list --versions icu4c | awk -F' ' '{print $NF}')
 #case "$PHP_VERSION" in
 #    "7.0" | "7.1" | "7.2")
 #        ICU4C_VERSION="64.2"
 #        ;;
-#    "7.3" | "7.4")
+#    "7.3")
+#       ICU4C_VERSION="67.1"
+#       ;;
+#    "7.4")
 #        ICU4C_VERSION="66.1"
 #        ;;
 #esac
