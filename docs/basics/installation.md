@@ -44,6 +44,10 @@ We've found the below or better to deliver the best experience.
 *   16GB+ RAM
 *   100GB+ of available disk space
 
+::: tip Apple Silicon M1 Chip Support
+Docker is [working on support](http://docker.com/blog/apple-silicon-m1-chips-and-docker) for Mac computers running Apple Silicon M1 chips. We've been monitoring their progress and plan to introduce an M1-compatible Lando binary as soon as possible. [Sponsor Lando](https://github.com/sponsors/lando) to make that world a reality!
+:::
+
 ## Preflight Checks
 
 1.  Verify that your system meets the [minimum system and hardware requirements](#system-requirements) to run Lando.
@@ -82,7 +86,7 @@ See: <https://github.com/Homebrew/homebrew-cask/blob/master/Casks/lando.rb>
 :::
 
 1. Ensure homebrew is installed and up-to-date.
-2. Add the lando cask: `brew cask install lando`
+2. Add the lando cask: `brew install --cask lando`
 
 ## Linux
 
@@ -181,7 +185,7 @@ When going through the installer you can choose to _not_ install Docker Desktop,
 To install from source you need to first make sure you've manually installed the below dependencies:
 
 * [the latest stable version of docker](https://docs.docker.com/engine/installation/) for your operating system, set to its **factory defaults**.
-* [the latest node 12](https://nodejs.org/en/download/)
+* [the latest node 14](https://nodejs.org/en/download/)
 * [the latest yarn](https://yarnpkg.com/lang/en/docs/install/)
 * **(linux only)** [the latest stable docker compose binary](https://github.com/docker/compose/releases) downloaded and placed at `/usr/share/lando/bin` and make executable.
 

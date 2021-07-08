@@ -139,6 +139,7 @@ module.exports = {
     via: 'apache',
     webroot: '.',
     xdebug: false,
+    proxy: {},
   },
   builder: (parent, config) => class LandoLaemp extends parent {
     constructor(id, options = {}) {
@@ -152,7 +153,7 @@ module.exports = {
         if (_.startsWith(options.via, 'nginx')) options.proxyService = 'appserver_nginx';
         else if (_.startsWith(options.via, 'apache')) options.proxyService = 'appserver';
       }
-      options.proxy = _.set({}, options.proxyService, [`${options.app}.${options._app._config.domain}`]);
+      options.proxy = _.set(options.proxy, options.proxyService, [`${options.app}.${options._app._config.domain}`]);
       // Downstream
       super(id, options);
     };

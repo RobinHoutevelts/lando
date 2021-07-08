@@ -1,7 +1,7 @@
 name: metrics
 source:
   root: "/"
-type: nodejs:14
+type: nodejs:12
 
 dependencies:
   nodejs:
@@ -26,7 +26,7 @@ mounts:
     source: local
     source_path: run
 
-disk: 5000
+disk: 6000
 
 hooks:
   build: |
@@ -49,3 +49,8 @@ crons:
       if [ "$PLATFORM_BRANCH" = master ]; then
         /app/.platformsh/bin/platform redeploy --yes --no-wait
       fi
+  flushlogs:
+    # Flush the PM2 logs once a month
+    spec: '0 1 1 * *'
+    cmd: |
+      PM2_HOME=/app/run pm2 flush

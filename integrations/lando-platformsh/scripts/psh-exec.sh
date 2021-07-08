@@ -3,8 +3,8 @@
 # environment.
 
 # Load Platform variables.
-for script in /etc/profile.d/*.sh ; do
-  if [ -r "$script" ] ; then
+for script in /etc/profile.d/*.sh; do
+  if [ -r "$script" ]; then
     . "$script"
   fi
 done
@@ -14,6 +14,11 @@ export HOME="/var/www"
 export USER="web"
 export SHELL="/bin/dash"
 export LANG="C.UTF-8"
+
+# @NOTE: This is not guaranteed to work. It is here as a convenience.
+if [ ! -z "${NODE_VERSION}" ]; then
+  export PATH="$PLATFORM_APP_DIR/.nvm/versions/node/${NODE_VERSION}/bin:${PATH}"
+fi
 
 # If we are running platform CLI commands we actually need to
 # Unset PLATFORM_RELATIONSHIPS and PLATFORM_APPLICATION for this script
